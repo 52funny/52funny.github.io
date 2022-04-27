@@ -1,236 +1,221 @@
-<!doctype html><html lang=zh-hans><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=HandheldFriendly content="True"><meta http-equiv=x-ua-compatible content="IE=edge"><meta http-equiv=cache-control content="no-transform"><meta http-equiv=cache-control content="no-siteapp"><meta name=generator content="Hugo 0.83.1"><link rel="shortcut icon" href=https://cdn.jsdelivr.net/gh/amzrk2/cdn-stcapi@1/favicons/favicon.ico><title>KINGOSOFT模拟登陆 - 52funny Blog</title><meta name=author content="52funny"><meta name=description content="KINGOSOFT模拟登陆"><meta name=keywords content="Go"><meta property="og:title" content="KINGOSOFT模拟登陆"><meta name=twitter:title content="KINGOSOFT模拟登陆"><meta property="og:type" content="article"><meta property="og:url" content="https://52funny.github.io/posts/013/"><meta property="og:description" content="KINGOSOFT模拟登陆"><meta name=twitter:description content="KINGOSOFT模拟登陆"><meta property="og:image" content="https://52funny.github.io/img/og.png"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://52funny.github.io/img/og.png"><meta property="article:published_time" content="2020-04-14T11:00:42+08:00"><meta property="article:modified_time" content="2020-04-14T11:00:42+08:00"><style>@media(prefers-color-scheme:dark){body[data-theme=auto] img{filter:brightness(60%)}}body[data-theme=dark] img{filter:brightness(60%)}</style><link rel=stylesheet href=https://52funny.github.io/assets/css/fuji.min.css></head><body data-theme=auto><script data-cfasync=false>var fujiThemeData=localStorage.getItem('fuji_data-theme');fujiThemeData?fujiThemeData!=='auto'&&document.body.setAttribute('data-theme',fujiThemeData==='dark'?'dark':'light'):localStorage.setItem('fuji_data-theme','auto')</script><header><div class="container-lg clearfix"><div class="col-12 header"><a class=title-main href=https://52funny.github.io>52funny Blog</a></div></div></header><main><div class="container-lg clearfix"><div class="col-12 col-md-9 float-left content"><article><h2 class="post-item post-title"><a href=https://52funny.github.io/posts/013/>KINGOSOFT模拟登陆</a></h2><div class="post-item post-meta"><span><i class="iconfont icon-today-sharp"></i>&nbsp;2020-04-14</span><span><i class="iconfont icon-file-tray-sharp"></i>&nbsp;1665 字</span><span><i class="iconfont icon-pricetags-sharp"></i>&nbsp;<a href=/tags/go>Go</a>&nbsp;</span></div><div class="post-content markdown-body"><p>最近在家实在无聊,然后打开了教务系统然后对他的登陆系统分析了一下发现大概是以下步骤</p><p><img class=img-zoomable src=https://file.52funny.top/blogpic/4956a82b7f4ea92da698cc553e1e032c.png alt=KINGOSOFT教务系统登陆></p><h3 id=获取-cookie>获取 Cookie</h3><p>首先我们可以访问教务系统的网址,然后获取 Cookie 的<code>JSESSIONID</code>值将其进行保存.</p><p><img class=img-zoomable src=https://file.52funny.top/blogpic/e1c82844acf7b88561f00dec8480daa0.jpg alt=Cookie></p><h3 id=加密账号密码信息>加密账号密码信息</h3><p>这时我们来分析一下网页 HTML 文件</p><pre><code class=language-html>&lt;td colspan=&quot;2&quot; height=&quot;26px&quot; align=&quot;center&quot; valign=&quot;top&quot;&gt;
-  &lt;input type=&quot;button&quot; id=&quot;login&quot; name=&quot;login&quot; class=&quot;login&quot; onclick=&quot;doLogon();&quot; value=&quot;&quot; /&gt;
-  &lt;input type=&quot;hidden&quot; id=&quot;reset&quot; name=&quot;reset&quot; class=&quot;reset&quot; onclick=&quot;doReset();&quot; value=&quot;&quot; /&gt;
-  &lt;a href=&quot;javascript:void(0);&quot; onclick=&quot;MobileReset();&quot; style=&quot;padding-left: 10px;&quot;&gt;忘记密码&lt;/a&gt;
-&lt;/td&gt;
-</code></pre><p>我们可以看见当按了登陆按钮时,这是我们执行的是一个<code>doLogin</code>的 JavaScript 的代码</p><p>我们继续找到这个 <code>doLogin</code> 的函数,发现他在这个 JavaScript 文件里</p><pre><code class=language-html>&lt;script type=&quot;text/javascript&quot; src=&quot;/suzxyjw/frame/Login.js?version=20181119&quot;&gt;&lt;/script&gt;
-</code></pre><p>继续找到这个文件里的<code>doLogin</code> 函数</p><pre><code class=language-js>function doLogon() {
-  // 输入信息验证
-  if (!validate()) {
-    return false
-  }
-
-  // 验证码正确性验证
-  var username = j$('#yhmc').val()
-  var password = j$('#yhmm').val()
-  var randnumber = j$('#randnumber').val()
-  var passwordPolicy = kutil.isPasswordPolicy(username, password)
-  var url = _webRootPath + 'cas/logon.action'
-
-  var txt_mm_expression = document.getElementById('txt_mm_expression').value
-  var txt_mm_length = document.getElementById('txt_mm_length').value
-  var txt_mm_userzh = document.getElementById('txt_mm_userzh').value
-
-  password = hex_md5(hex_md5(password) + hex_md5(randnumber.toLowerCase()))
-  /**
-	var params = {
-					&quot;yhmc&quot; : username,
-					&quot;yhmm&quot; : password,
-					&quot;randnumber&quot;: randnumber,
-					&quot;isPasswordPolicy&quot; : passwordPolicy
-				};
-	*/
-  var p_username = '_u' + randnumber
-  var p_password = '_p' + randnumber
-  username = base64encode(username + ';;' + _sessionid)
-  var params =
-    p_username +
-    '=' +
-    username +
-    '&amp;' +
-    p_password +
-    '=' +
-    password +
-    '&amp;randnumber=' +
-    randnumber +
-    '&amp;isPasswordPolicy=' +
-    passwordPolicy +
-    '&amp;txt_mm_expression=' +
-    txt_mm_expression +
-    '&amp;txt_mm_length=' +
-    txt_mm_length +
-    '&amp;txt_mm_userzh=' +
-    txt_mm_userzh
-  //alert(&quot;params=&quot;+params);
-  params = getEncParams(params)
-  //alert(&quot;encparams=&quot;+params);
-  doPreLogon()
-  kutil.doAjax(url, params, doPostLogon)
-
-  function doPreLogon() {
-    j$('#msg').html('正在登录......')
-    j$('#login').attr('disabled', true)
-    j$('#reset').attr('disabled', true)
-  }
-
-  function doPostLogon(response) {
-    var data = JSON.parse(response)
-    var status = data.status
-    var message = data.message
-    if ('200' == status) {
-      var result = data.result
-      window.document.location.href = result
-    } else {
-      reloadScript('kingo_encypt', _webRootPath + 'custom/js/SetKingoEncypt.jsp')
-      if ('407' == status) {
-        alert(message)
-        showMessage('')
-      } else {
-        showMessage(message)
-      }
-      j$('#login').attr('disabled', false)
-      j$('#reset').attr('disabled', false)
-      refreshImg()
-      if ('401' == status) {
-        j$('#randnumber').val('')
-        j$('#randnumber').focus()
-      } else {
-        j$('#yhmc').val('')
-        j$('#yhmm').val('')
-        j$('#randnumber').val('')
-        j$('#yhmc').focus()
-      }
-    }
-  }
-}
-</code></pre><p>我们继续来分析</p><p>首先<code>username, password, randnumber</code> 就是你的账号密码和验证码</p><p>其次<code>passwordPolicy</code> 是一个函数的返回值我没有找到这个函数但是我用了一种方法就是在控制台来输出函数的返回值.</p><p>我随便试了一个账户和密码</p><p><img class=img-zoomable src=https://file.52funny.top/blogpic/39ab12c545d398e499796a420461b9c3.jpg alt=Xnip2020-04-13_19-20-29></p><p>然后他的返回值是<code>0</code></p><p>然后输入了正确的账号密码</p><p><img class=img-zoomable src=https://file.52funny.top/blogpic/a2fb5404dd1a9f67ba21a6cc3dbcae52.jpg alt=Xnip2020-04-13_19-25-18></p><p>然后他的返回值是<code>1</code></p><p>所以我们只需要知道<code>passwordPolicy</code>的值是<code>1</code></p><p>接着分析 <code>txt_mm_expression</code> <code>txt_mm_length</code> <code>txt_mm_userzh</code> 这三个变量是通过获取元素的值</p><pre><code class=language-js>var txt_mm_expression = document.getElementById('txt_mm_expression').value
-var txt_mm_length = document.getElementById('txt_mm_length').value
-var txt_mm_userzh = document.getElementById('txt_mm_userzh').value
-</code></pre><p>然后我就在之前的 HTML 文件中找到声明这三个变量的 JavaScrpt 代码</p><pre><code class=language-js>function checkpwd(oInput) {
-  var pwd = oInput.value
-  var result = 0
-  for (var i = 0, len = pwd.length; i &lt; len; ++i) {
-    result |= charType(pwd.charCodeAt(i))
-  }
-  document.getElementById('txt_mm_expression').value = result //密码规则
-  document.getElementById('txt_mm_length').value = pwd.length //密码长度
-
-  var userzh = document.getElementById('yhmc').value //取账号
-
-  var inuserzh = '0'
-
-  if (pwd.toLowerCase().trim().indexOf(userzh.toLowerCase().trim()) &gt; -1) {
-    inuserzh = '1'
-  }
-  document.getElementById('txt_mm_userzh').value = inuserzh //判断密码是否包含账号
-}
-
-function charType(num) {
-  if (num &gt;= 48 &amp;&amp; num &lt;= 57) {
-    return 8
-  }
-  if (num &gt;= 97 &amp;&amp; num &lt;= 122) {
-    return 4
-  }
-  if (num &gt;= 65 &amp;&amp; num &lt;= 90) {
-    return 2
-  }
-  return 1
-}
-</code></pre><p>通过代码分析可知<code>txt_mm_expression</code> 是一个密码的复杂度遵从以下规则</p><table><thead><tr><th style=text-align:center>数字</th><th style=text-align:center>大写字母</th><th style=text-align:center>小写字母</th><th style=text-align:center>其他符号</th></tr></thead><tbody><tr><td style=text-align:center>8</td><td style=text-align:center>2</td><td style=text-align:center>4</td><td style=text-align:center>1</td></tr></tbody></table><p>比如我的密码是以下几种情况的话, 返回值分别如下</p><pre><code>123 -&gt; 8
+<!doctype html><html lang=zh-hans><meta charset=utf-8><meta name=generator content="Hugo 0.97.3"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name=color-scheme content="light dark"><meta name=supported-color-schemes content="light dark"><title>KINGOSOFT模拟登陆&nbsp;&ndash;&nbsp;52funny Blog</title><link rel=stylesheet href=/css/core.min.ce377468f8d4eea57a095f8d4581a56bae44d81643a42e5e1ae36b10a2a1eb4e3fcd37985f285ccc586eb563916c2d3a.css integrity=sha384-zjd0aPjU7qV6CV+NRYGla65E2BZDpC5eGuNrEKKh604/zTeYXyhczFhutWORbC06><meta name=twitter:card content="summary"><meta name=twitter:title content="KINGOSOFT模拟登陆"><body><section id=header><div class="header wrap"><span class="header left-side"><a class="site home" href=/><span class="site name">52funny Blog</span></a></span>
+<span class="header right-side"><div class="nav wrap"><nav class=nav><a class="nav item" href=/categories/></a><a class="nav item" href=/tags/></a><a class="nav item" href=/friends>Friends</a><a class="nav item" href=/about>About</a></nav></div></span></div><div class="site slogan"><span class=title>< Code /></span></div></section><section id=content><div class=article-container><section class="article header"><h1 class="article title">KINGOSOFT模拟登陆</h1><p class="article date">2020-04-14</p></section><article class="article markdown-body"><p>最近在家实在无聊,然后打开了教务系统然后对他的登陆系统分析了一下发现大概是以下步骤</p><p><img src=https://file.52funny.top/blogpic/4956a82b7f4ea92da698cc553e1e032c.png alt=KINGOSOFT教务系统登陆></p><h3 id=获取-cookie>获取 Cookie</h3><p>首先我们可以访问教务系统的网址,然后获取 Cookie 的<code>JSESSIONID</code>值将其进行保存.</p><p><img src=https://file.52funny.top/blogpic/e1c82844acf7b88561f00dec8480daa0.jpg alt=Cookie></p><h3 id=加密账号密码信息>加密账号密码信息</h3><p>这时我们来分析一下网页 HTML 文件</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-html data-lang=html><span style=display:flex><span>&lt;<span style=color:#f92672>td</span> <span style=color:#a6e22e>colspan</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;2&#34;</span> <span style=color:#a6e22e>height</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;26px&#34;</span> <span style=color:#a6e22e>align</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;center&#34;</span> <span style=color:#a6e22e>valign</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;top&#34;</span>&gt;
+</span></span><span style=display:flex><span>  &lt;<span style=color:#f92672>input</span> <span style=color:#a6e22e>type</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;button&#34;</span> <span style=color:#a6e22e>id</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;login&#34;</span> <span style=color:#a6e22e>name</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;login&#34;</span> <span style=color:#a6e22e>class</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;login&#34;</span> <span style=color:#a6e22e>onclick</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;doLogon();&#34;</span> <span style=color:#a6e22e>value</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;&#34;</span> /&gt;
+</span></span><span style=display:flex><span>  &lt;<span style=color:#f92672>input</span> <span style=color:#a6e22e>type</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;hidden&#34;</span> <span style=color:#a6e22e>id</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;reset&#34;</span> <span style=color:#a6e22e>name</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;reset&#34;</span> <span style=color:#a6e22e>class</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;reset&#34;</span> <span style=color:#a6e22e>onclick</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;doReset();&#34;</span> <span style=color:#a6e22e>value</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;&#34;</span> /&gt;
+</span></span><span style=display:flex><span>  &lt;<span style=color:#f92672>a</span> <span style=color:#a6e22e>href</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;javascript:void(0);&#34;</span> <span style=color:#a6e22e>onclick</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;MobileReset();&#34;</span> <span style=color:#a6e22e>style</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;padding-left: 10px;&#34;</span>&gt;忘记密码&lt;/<span style=color:#f92672>a</span>&gt;
+</span></span><span style=display:flex><span>&lt;/<span style=color:#f92672>td</span>&gt;
+</span></span></code></pre></div><p>我们可以看见当按了登陆按钮时,这是我们执行的是一个<code>doLogin</code>的 JavaScript 的代码</p><p>我们继续找到这个 <code>doLogin</code> 的函数,发现他在这个 JavaScript 文件里</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-html data-lang=html><span style=display:flex><span>&lt;<span style=color:#f92672>script</span> <span style=color:#a6e22e>type</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;text/javascript&#34;</span> <span style=color:#a6e22e>src</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;/suzxyjw/frame/Login.js?version=20181119&#34;</span>&gt;&lt;/<span style=color:#f92672>script</span>&gt;
+</span></span></code></pre></div><p>继续找到这个文件里的<code>doLogin</code> 函数</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=display:flex><span><span style=color:#66d9ef>function</span> <span style=color:#a6e22e>doLogon</span>() {
+</span></span><span style=display:flex><span>  <span style=color:#75715e>// 输入信息验证
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  <span style=color:#66d9ef>if</span> (<span style=color:#f92672>!</span><span style=color:#a6e22e>validate</span>()) {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>false</span>
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>// 验证码正确性验证
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>username</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>j$</span>(<span style=color:#e6db74>&#39;#yhmc&#39;</span>).<span style=color:#a6e22e>val</span>()
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>password</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>j$</span>(<span style=color:#e6db74>&#39;#yhmm&#39;</span>).<span style=color:#a6e22e>val</span>()
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>randnumber</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>j$</span>(<span style=color:#e6db74>&#39;#randnumber&#39;</span>).<span style=color:#a6e22e>val</span>()
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>passwordPolicy</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>kutil</span>.<span style=color:#a6e22e>isPasswordPolicy</span>(<span style=color:#a6e22e>username</span>, <span style=color:#a6e22e>password</span>)
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>url</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>_webRootPath</span> <span style=color:#f92672>+</span> <span style=color:#e6db74>&#39;cas/logon.action&#39;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>txt_mm_expression</span> <span style=color:#f92672>=</span> document.<span style=color:#a6e22e>getElementById</span>(<span style=color:#e6db74>&#39;txt_mm_expression&#39;</span>).<span style=color:#a6e22e>value</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>txt_mm_length</span> <span style=color:#f92672>=</span> document.<span style=color:#a6e22e>getElementById</span>(<span style=color:#e6db74>&#39;txt_mm_length&#39;</span>).<span style=color:#a6e22e>value</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>txt_mm_userzh</span> <span style=color:#f92672>=</span> document.<span style=color:#a6e22e>getElementById</span>(<span style=color:#e6db74>&#39;txt_mm_userzh&#39;</span>).<span style=color:#a6e22e>value</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>password</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>hex_md5</span>(<span style=color:#a6e22e>hex_md5</span>(<span style=color:#a6e22e>password</span>) <span style=color:#f92672>+</span> <span style=color:#a6e22e>hex_md5</span>(<span style=color:#a6e22e>randnumber</span>.<span style=color:#a6e22e>toLowerCase</span>()))
+</span></span><span style=display:flex><span>  <span style=color:#75715e>/**
+</span></span></span><span style=display:flex><span><span style=color:#75715e>	var params = {
+</span></span></span><span style=display:flex><span><span style=color:#75715e>					&#34;yhmc&#34; : username,
+</span></span></span><span style=display:flex><span><span style=color:#75715e>					&#34;yhmm&#34; : password,
+</span></span></span><span style=display:flex><span><span style=color:#75715e>					&#34;randnumber&#34;: randnumber,
+</span></span></span><span style=display:flex><span><span style=color:#75715e>					&#34;isPasswordPolicy&#34; : passwordPolicy
+</span></span></span><span style=display:flex><span><span style=color:#75715e>				};
+</span></span></span><span style=display:flex><span><span style=color:#75715e>	*/</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>p_username</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;_u&#39;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>randnumber</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>p_password</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;_p&#39;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>randnumber</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>username</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>base64encode</span>(<span style=color:#a6e22e>username</span> <span style=color:#f92672>+</span> <span style=color:#e6db74>&#39;;;&#39;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>_sessionid</span>)
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>params</span> <span style=color:#f92672>=</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>p_username</span> <span style=color:#f92672>+</span>
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#39;=&#39;</span> <span style=color:#f92672>+</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>username</span> <span style=color:#f92672>+</span>
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#39;&amp;&#39;</span> <span style=color:#f92672>+</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>p_password</span> <span style=color:#f92672>+</span>
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#39;=&#39;</span> <span style=color:#f92672>+</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>password</span> <span style=color:#f92672>+</span>
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#39;&amp;randnumber=&#39;</span> <span style=color:#f92672>+</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>randnumber</span> <span style=color:#f92672>+</span>
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#39;&amp;isPasswordPolicy=&#39;</span> <span style=color:#f92672>+</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>passwordPolicy</span> <span style=color:#f92672>+</span>
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#39;&amp;txt_mm_expression=&#39;</span> <span style=color:#f92672>+</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>txt_mm_expression</span> <span style=color:#f92672>+</span>
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#39;&amp;txt_mm_length=&#39;</span> <span style=color:#f92672>+</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>txt_mm_length</span> <span style=color:#f92672>+</span>
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#39;&amp;txt_mm_userzh=&#39;</span> <span style=color:#f92672>+</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>txt_mm_userzh</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>//alert(&#34;params=&#34;+params);
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  <span style=color:#a6e22e>params</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>getEncParams</span>(<span style=color:#a6e22e>params</span>)
+</span></span><span style=display:flex><span>  <span style=color:#75715e>//alert(&#34;encparams=&#34;+params);
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  <span style=color:#a6e22e>doPreLogon</span>()
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>kutil</span>.<span style=color:#a6e22e>doAjax</span>(<span style=color:#a6e22e>url</span>, <span style=color:#a6e22e>params</span>, <span style=color:#a6e22e>doPostLogon</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>function</span> <span style=color:#a6e22e>doPreLogon</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>j$</span>(<span style=color:#e6db74>&#39;#msg&#39;</span>).<span style=color:#a6e22e>html</span>(<span style=color:#e6db74>&#39;正在登录......&#39;</span>)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>j$</span>(<span style=color:#e6db74>&#39;#login&#39;</span>).<span style=color:#a6e22e>attr</span>(<span style=color:#e6db74>&#39;disabled&#39;</span>, <span style=color:#66d9ef>true</span>)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>j$</span>(<span style=color:#e6db74>&#39;#reset&#39;</span>).<span style=color:#a6e22e>attr</span>(<span style=color:#e6db74>&#39;disabled&#39;</span>, <span style=color:#66d9ef>true</span>)
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>function</span> <span style=color:#a6e22e>doPostLogon</span>(<span style=color:#a6e22e>response</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>data</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>JSON</span>.<span style=color:#a6e22e>parse</span>(<span style=color:#a6e22e>response</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>status</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>data</span>.<span style=color:#a6e22e>status</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>message</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>data</span>.<span style=color:#a6e22e>message</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> (<span style=color:#e6db74>&#39;200&#39;</span> <span style=color:#f92672>==</span> <span style=color:#a6e22e>status</span>) {
+</span></span><span style=display:flex><span>      <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>result</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>data</span>.<span style=color:#a6e22e>result</span>
+</span></span><span style=display:flex><span>      window.document.<span style=color:#a6e22e>location</span>.<span style=color:#a6e22e>href</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>result</span>
+</span></span><span style=display:flex><span>    } <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>      <span style=color:#a6e22e>reloadScript</span>(<span style=color:#e6db74>&#39;kingo_encypt&#39;</span>, <span style=color:#a6e22e>_webRootPath</span> <span style=color:#f92672>+</span> <span style=color:#e6db74>&#39;custom/js/SetKingoEncypt.jsp&#39;</span>)
+</span></span><span style=display:flex><span>      <span style=color:#66d9ef>if</span> (<span style=color:#e6db74>&#39;407&#39;</span> <span style=color:#f92672>==</span> <span style=color:#a6e22e>status</span>) {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>alert</span>(<span style=color:#a6e22e>message</span>)
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>showMessage</span>(<span style=color:#e6db74>&#39;&#39;</span>)
+</span></span><span style=display:flex><span>      } <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>showMessage</span>(<span style=color:#a6e22e>message</span>)
+</span></span><span style=display:flex><span>      }
+</span></span><span style=display:flex><span>      <span style=color:#a6e22e>j$</span>(<span style=color:#e6db74>&#39;#login&#39;</span>).<span style=color:#a6e22e>attr</span>(<span style=color:#e6db74>&#39;disabled&#39;</span>, <span style=color:#66d9ef>false</span>)
+</span></span><span style=display:flex><span>      <span style=color:#a6e22e>j$</span>(<span style=color:#e6db74>&#39;#reset&#39;</span>).<span style=color:#a6e22e>attr</span>(<span style=color:#e6db74>&#39;disabled&#39;</span>, <span style=color:#66d9ef>false</span>)
+</span></span><span style=display:flex><span>      <span style=color:#a6e22e>refreshImg</span>()
+</span></span><span style=display:flex><span>      <span style=color:#66d9ef>if</span> (<span style=color:#e6db74>&#39;401&#39;</span> <span style=color:#f92672>==</span> <span style=color:#a6e22e>status</span>) {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>j$</span>(<span style=color:#e6db74>&#39;#randnumber&#39;</span>).<span style=color:#a6e22e>val</span>(<span style=color:#e6db74>&#39;&#39;</span>)
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>j$</span>(<span style=color:#e6db74>&#39;#randnumber&#39;</span>).<span style=color:#a6e22e>focus</span>()
+</span></span><span style=display:flex><span>      } <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>j$</span>(<span style=color:#e6db74>&#39;#yhmc&#39;</span>).<span style=color:#a6e22e>val</span>(<span style=color:#e6db74>&#39;&#39;</span>)
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>j$</span>(<span style=color:#e6db74>&#39;#yhmm&#39;</span>).<span style=color:#a6e22e>val</span>(<span style=color:#e6db74>&#39;&#39;</span>)
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>j$</span>(<span style=color:#e6db74>&#39;#randnumber&#39;</span>).<span style=color:#a6e22e>val</span>(<span style=color:#e6db74>&#39;&#39;</span>)
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>j$</span>(<span style=color:#e6db74>&#39;#yhmc&#39;</span>).<span style=color:#a6e22e>focus</span>()
+</span></span><span style=display:flex><span>      }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>我们继续来分析</p><p>首先<code>username, password, randnumber</code> 就是你的账号密码和验证码</p><p>其次<code>passwordPolicy</code> 是一个函数的返回值我没有找到这个函数但是我用了一种方法就是在控制台来输出函数的返回值.</p><p>我随便试了一个账户和密码</p><p><img src=https://file.52funny.top/blogpic/39ab12c545d398e499796a420461b9c3.jpg alt=Xnip2020-04-13_19-20-29></p><p>然后他的返回值是<code>0</code></p><p>然后输入了正确的账号密码</p><p><img src=https://file.52funny.top/blogpic/a2fb5404dd1a9f67ba21a6cc3dbcae52.jpg alt=Xnip2020-04-13_19-25-18></p><p>然后他的返回值是<code>1</code></p><p>所以我们只需要知道<code>passwordPolicy</code>的值是<code>1</code></p><p>接着分析 <code>txt_mm_expression</code> <code>txt_mm_length</code> <code>txt_mm_userzh</code> 这三个变量是通过获取元素的值</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=display:flex><span><span style=color:#66d9ef>var</span> <span style=color:#a6e22e>txt_mm_expression</span> <span style=color:#f92672>=</span> document.<span style=color:#a6e22e>getElementById</span>(<span style=color:#e6db74>&#39;txt_mm_expression&#39;</span>).<span style=color:#a6e22e>value</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>var</span> <span style=color:#a6e22e>txt_mm_length</span> <span style=color:#f92672>=</span> document.<span style=color:#a6e22e>getElementById</span>(<span style=color:#e6db74>&#39;txt_mm_length&#39;</span>).<span style=color:#a6e22e>value</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>var</span> <span style=color:#a6e22e>txt_mm_userzh</span> <span style=color:#f92672>=</span> document.<span style=color:#a6e22e>getElementById</span>(<span style=color:#e6db74>&#39;txt_mm_userzh&#39;</span>).<span style=color:#a6e22e>value</span>
+</span></span></code></pre></div><p>然后我就在之前的 HTML 文件中找到声明这三个变量的 JavaScrpt 代码</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=display:flex><span><span style=color:#66d9ef>function</span> <span style=color:#a6e22e>checkpwd</span>(<span style=color:#a6e22e>oInput</span>) {
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>pwd</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>oInput</span>.<span style=color:#a6e22e>value</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>result</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>var</span> <span style=color:#a6e22e>i</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>, <span style=color:#a6e22e>len</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>pwd</span>.<span style=color:#a6e22e>length</span>; <span style=color:#a6e22e>i</span> <span style=color:#f92672>&lt;</span> <span style=color:#a6e22e>len</span>; <span style=color:#f92672>++</span><span style=color:#a6e22e>i</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>result</span> <span style=color:#f92672>|=</span> <span style=color:#a6e22e>charType</span>(<span style=color:#a6e22e>pwd</span>.<span style=color:#a6e22e>charCodeAt</span>(<span style=color:#a6e22e>i</span>))
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>  document.<span style=color:#a6e22e>getElementById</span>(<span style=color:#e6db74>&#39;txt_mm_expression&#39;</span>).<span style=color:#a6e22e>value</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>result</span> <span style=color:#75715e>//密码规则
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  document.<span style=color:#a6e22e>getElementById</span>(<span style=color:#e6db74>&#39;txt_mm_length&#39;</span>).<span style=color:#a6e22e>value</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>pwd</span>.<span style=color:#a6e22e>length</span> <span style=color:#75715e>//密码长度
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>userzh</span> <span style=color:#f92672>=</span> document.<span style=color:#a6e22e>getElementById</span>(<span style=color:#e6db74>&#39;yhmc&#39;</span>).<span style=color:#a6e22e>value</span> <span style=color:#75715e>//取账号
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>inuserzh</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;0&#39;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>pwd</span>.<span style=color:#a6e22e>toLowerCase</span>().<span style=color:#a6e22e>trim</span>().<span style=color:#a6e22e>indexOf</span>(<span style=color:#a6e22e>userzh</span>.<span style=color:#a6e22e>toLowerCase</span>().<span style=color:#a6e22e>trim</span>()) <span style=color:#f92672>&gt;</span> <span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>inuserzh</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;1&#39;</span>
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>  document.<span style=color:#a6e22e>getElementById</span>(<span style=color:#e6db74>&#39;txt_mm_userzh&#39;</span>).<span style=color:#a6e22e>value</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>inuserzh</span> <span style=color:#75715e>//判断密码是否包含账号
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>function</span> <span style=color:#a6e22e>charType</span>(<span style=color:#a6e22e>num</span>) {
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>num</span> <span style=color:#f92672>&gt;=</span> <span style=color:#ae81ff>48</span> <span style=color:#f92672>&amp;&amp;</span> <span style=color:#a6e22e>num</span> <span style=color:#f92672>&lt;=</span> <span style=color:#ae81ff>57</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>8</span>
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>num</span> <span style=color:#f92672>&gt;=</span> <span style=color:#ae81ff>97</span> <span style=color:#f92672>&amp;&amp;</span> <span style=color:#a6e22e>num</span> <span style=color:#f92672>&lt;=</span> <span style=color:#ae81ff>122</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>4</span>
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>num</span> <span style=color:#f92672>&gt;=</span> <span style=color:#ae81ff>65</span> <span style=color:#f92672>&amp;&amp;</span> <span style=color:#a6e22e>num</span> <span style=color:#f92672>&lt;=</span> <span style=color:#ae81ff>90</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>2</span>
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>通过代码分析可知<code>txt_mm_expression</code> 是一个密码的复杂度遵从以下规则</p><table><thead><tr><th style=text-align:center>数字</th><th style=text-align:center>大写字母</th><th style=text-align:center>小写字母</th><th style=text-align:center>其他符号</th></tr></thead><tbody><tr><td style=text-align:center>8</td><td style=text-align:center>2</td><td style=text-align:center>4</td><td style=text-align:center>1</td></tr></tbody></table><p>比如我的密码是以下几种情况的话, 返回值分别如下</p><pre tabindex=0><code>123 -&gt; 8
 123A -&gt; 10
 123Aa -&gt; 14
 123Aa# -&gt; 15
-</code></pre><p><code>txt_mm_length</code>就很简单了, 他就是密码的长度.</p><p><code>txt_mm_userzh</code> 从他的注释来看就是判断密码是否包含账号.</p><p>接着我们来分析<code>doLogin</code>函数</p><pre><code class=language-js>password = hex_md5(hex_md5(password) + hex_md5(randnumber.toLowerCase()))
-</code></pre><p><code>hex_md5</code> 函数就是把字符串变成 md5 值</p><p>然后他将这些变量进行<code>base64encode</code> 最后得到一个<code>params</code> 变量</p><pre><code class=language-js>var p_username = '_u' + randnumber
-var p_password = '_p' + randnumber
-username = base64encode(username + ';;' + _sessionid)
-var params =
-  p_username +
-  '=' +
-  username +
-  '&amp;' +
-  p_password +
-  '=' +
-  password +
-  '&amp;randnumber=' +
-  randnumber +
-  '&amp;isPasswordPolicy=' +
-  passwordPolicy +
-  '&amp;txt_mm_expression=' +
-  txt_mm_expression +
-  '&amp;txt_mm_length=' +
-  txt_mm_length +
-  '&amp;txt_mm_userzh=' +
-  txt_mm_userzh
-</code></pre><p>然后将<code>params</code> 用<code>getEncParams</code> 函数加密</p><pre><code class=language-js>params = getEncParams(params)
-</code></pre><p>然后发现他在另一个 JavaScript 文件里</p><pre><code class=language-html>&lt;script
-  type=&quot;text/javascript&quot;
-  src=&quot;/suzxyjw/custom/js/SetKingoEncypt.jsp?t=4901586828474712746&quot;
-  id=&quot;kingo_encypt&quot;
-&gt;&lt;/script&gt;
-</code></pre><p>但是这个 JavaScript 文件后面的链接 t 后面的参数是 刷新一次网页就会变的,所以我们要用正则表达式进行提取 <code>/suzxyjw/custom/js/SetKingoEncypt.jsp\?t=[0-9]+</code></p><p>然后打开这个 JavaScript 脚本</p><pre><code class=language-js>var _deskey = '6061586830242491265'
-var _nowtime = '2020-04-14 10:10:42'
-document.write(
-  &quot;&lt;script type='text/javascript' src='http://211.86.128.194:80/suzxyjw/custom/js/base64.js'&gt;&lt;/script&gt;&quot;
-)
-document.write(
-  &quot;&lt;script type='text/javascript' src='http://211.86.128.194:80/suzxyjw/custom/js/md5.js'&gt;&lt;/script&gt;&quot;
-)
-document.write(
-  &quot;&lt;script type='text/javascript' src='http://211.86.128.194:80/suzxyjw/custom/js/jkingo.des.js'&gt;&lt;/script&gt;&quot;
-)
-function b64_encode(data) {
-  return base64encode(utf16to8(data))
-}
-function b64_decode(data) {
-  return utf8to16(base64decode(data))
-}
-function md5(data) {
-  return hex_md5(data)
-}
-function des_encode(data) {
-  return strEnc(data, _deskey, null, null)
-}
-function des_decode(data) {
-  return strDec(data, _deskey, null, null)
-}
-function getEncParams(params) {
-  var timestamp = _nowtime
-  var token = md5(md5(params) + md5(timestamp))
-  var _params = b64_encode(des_encode(params))
-  _params = 'params=' + _params + '&amp;token=' + token + '&amp;timestamp=' + timestamp
-  return _params
-}
-function reloadScript00(id, jsfile) {
-  jsfile = jsfile + '?random=' + Math.random()
-  if (id == 'kingo_encypt') document.getElementById('kingo_encypt').src = jsfile
-}
-function reloadScript(id, jsfile) {
-  var oldS = document.getElementById(id)
-  if (oldS) oldS.parentNode.removeChild(oldS)
-  var t = document.createElement('script')
-  if (new String(jsfile).indexOf('?') &gt; -1) {
-    jsfile = jsfile + '&amp;random=' + Math.random()
-  } else {
-    jsfile = jsfile + '?random=' + Math.random()
-  }
-  t.src = jsfile
-  t.type = 'text/javascript'
-  t.id = id
-  document.getElementsByTagName('head')[0].appendChild(t)
-}
-var G_LOGIN_ID = 'kingo.guest'
-</code></pre><p>发现<code>getEncParams</code> 这个函数里面有一个函数<code>des_encode</code></p><p>这个<code>des_encode</code> 里面有一个函数 <code>strEnc(data, _deskey, null, null)</code></p><p><code>strEnc</code> 接受四个参数 <code>data</code>, <code>firstKey</code>, <code>secondKey</code>, <code>thirdKey</code>.</p><blockquote><p>jkingo.des.js 链接我将放置文章末尾</p></blockquote><p>这里有个坑就是我们访问这个<code>SetKingoEncypt.jsp</code> 链接是 我们必须要携带 Cookie 访问, 而且每次访问出来的<code>_deskey</code>, <code>_nowtime</code> 都是不一样的, 这里我们还是要进行字符串的提取可以用正则也可以用其他的.</p><h3 id=提交登陆信息>提交登陆信息</h3><p>最后通过 Post 请求发送数据表单</p><pre><code class=language-js>'params=' + _params + '&amp;token=' + token + '&amp;timestamp=' + timestamp
-</code></pre><p>表单总共有三个数据 <code>params</code>, <code>token</code>, <code>timestamp</code></p><p>最后发送 POST 请求后可以得到如下的 JSON 数据</p><pre><code class=language-json>{
-  &quot;message&quot;: &quot;操作成功!&quot;,
-  &quot;result&quot;: &quot;/suzxyjw/MainFrm.html?random=0.14040851742858051&quot;,
-  &quot;status&quot;: &quot;200&quot;
-}
-</code></pre><p>最后就可以用 CookIe 进行其他的操作了.</p><blockquote><p><a href=http://211.86.128.194:80/suzxyjw/custom/js/jkingo.des.js target=_blank>jkingo.des.js</a></p><p><a href=https://github.com/52funny/KINGOSOFT-LOGIN target=_blank>演示代码(仅供参考)</a></p></blockquote></div></article></div><aside class="col-12 col-md-3 float-left sidebar"><div class="sidebar-item sidebar-pages"><h3>页面</h3><ul><li><a href=/>Home</a></li><li><a href=/archives/>Archives</a></li><li><a href=/about/>About</a></li><li><a href=/search/>Search</a></li><li><a href=/friends/>Friends</a></li><li><a href=/index.xml>RSS</a></li></ul></div><div class="sidebar-item sidebar-links"><h3>链接</h3><ul><li><a href=https://github.com/52funny target=_blank><span>GitHub</span></a></li></ul></div><div class="sidebar-item sidebar-tags"><h3>标签</h3><div><span><a href=/tags/api/>API</a></span>
-<span><a href=/tags/canddy/>Canddy</a></span>
-<span><a href=/tags/docker/>Docker</a></span>
-<span><a href=/tags/go/>Go</a></span>
-<span><a href=/tags/leetcode/>Leetcode</a></span>
-<span><a href=/tags/linux/>Linux</a></span>
-<span><a href=/tags/mysql/>mysql</a></span>
-<span><a href=/tags/%E7%AE%97%E6%B3%95/>算法</a></span></div></div><div class="sidebar-item sidebar-toc"><h3>目录</h3><nav id=TableOfContents><ul><li><ul><li><a href=#获取-cookie>获取 Cookie</a></li><li><a href=#加密账号密码信息>加密账号密码信息</a></li><li><a href=#提交登陆信息>提交登陆信息</a></li></ul></li></ul></nav></div></aside></div><div class=btn><div class=btn-menu id=btn-menu><i class="iconfont icon-grid-sharp"></i></div><div class=btn-toggle-mode><i class="iconfont icon-contrast-sharp"></i></div><div class=btn-scroll-top><i class="iconfont icon-chevron-up-circle-sharp"></i></div></div><aside class=sidebar-mobile style=display:none><div class=sidebar-wrapper><div class="sidebar-item sidebar-pages"><h3>页面</h3><ul><li><a href=/>Home</a></li><li><a href=/archives/>Archives</a></li><li><a href=/about/>About</a></li><li><a href=/search/>Search</a></li><li><a href=/friends/>Friends</a></li><li><a href=/index.xml>RSS</a></li></ul></div><div class="sidebar-item sidebar-links"><h3>链接</h3><ul><li><a href=https://github.com/52funny target=_blank><span>GitHub</span></a></li></ul></div><div class="sidebar-item sidebar-tags"><h3>标签</h3><div><span><a href=/tags/api/>API</a></span>
-<span><a href=/tags/canddy/>Canddy</a></span>
-<span><a href=/tags/docker/>Docker</a></span>
-<span><a href=/tags/go/>Go</a></span>
-<span><a href=/tags/leetcode/>Leetcode</a></span>
-<span><a href=/tags/linux/>Linux</a></span>
-<span><a href=/tags/mysql/>mysql</a></span>
-<span><a href=/tags/%E7%AE%97%E6%B3%95/>算法</a></span></div></div><div class="sidebar-item sidebar-toc"><h3>目录</h3><nav id=TableOfContents><ul><li><ul><li><a href=#获取-cookie>获取 Cookie</a></li><li><a href=#加密账号密码信息>加密账号密码信息</a></li><li><a href=#提交登陆信息>提交登陆信息</a></li></ul></li></ul></nav></div></div></aside></main><footer><div class="container-lg clearfix"><div class="col-12 footer"><p>除特殊注明部分，本站内容采用 <a rel=license href=http://creativecommons.org/licenses/by-nc-sa/4.0/ target=_blank>CC BY-NC-SA 4.0</a> 进行许可。</p><span>&copy; 2020-2021
-<a href=https://52funny.github.io>52funny</a>
-| 基于 <a href=https://github.com/amzrk2/hugo-theme-fuji/ target=_blank>Fuji-v2</a> & <a href=https://gohugo.io/ target=_blank>Hugo</a> 构建</span></div></div></footer><script defer src=https://cdn.jsdelivr.net/npm/medium-zoom@1.0.6/dist/medium-zoom.min.js></script><script defer src=https://cdn.jsdelivr.net/npm/lazysizes@5.3.0/lazysizes.min.js></script><script defer src=https://cdn.jsdelivr.net/npm/prismjs@1.23.0/components/prism-core.min.js></script><script defer src=https://cdn.jsdelivr.net/npm/prismjs@1.23.0/plugins/autoloader/prism-autoloader.min.js></script><script defer src=/assets/js/fuji.min.js></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css><script defer src=https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js></script><script defer src=https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js onload=renderMathInElement(document.body)></script></body></html>
+</code></pre><p><code>txt_mm_length</code>就很简单了, 他就是密码的长度.</p><p><code>txt_mm_userzh</code> 从他的注释来看就是判断密码是否包含账号.</p><p>接着我们来分析<code>doLogin</code>函数</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=display:flex><span><span style=color:#a6e22e>password</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>hex_md5</span>(<span style=color:#a6e22e>hex_md5</span>(<span style=color:#a6e22e>password</span>) <span style=color:#f92672>+</span> <span style=color:#a6e22e>hex_md5</span>(<span style=color:#a6e22e>randnumber</span>.<span style=color:#a6e22e>toLowerCase</span>()))
+</span></span></code></pre></div><p><code>hex_md5</code> 函数就是把字符串变成 md5 值</p><p>然后他将这些变量进行<code>base64encode</code> 最后得到一个<code>params</code> 变量</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=display:flex><span><span style=color:#66d9ef>var</span> <span style=color:#a6e22e>p_username</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;_u&#39;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>randnumber</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>var</span> <span style=color:#a6e22e>p_password</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;_p&#39;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>randnumber</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>username</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>base64encode</span>(<span style=color:#a6e22e>username</span> <span style=color:#f92672>+</span> <span style=color:#e6db74>&#39;;;&#39;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>_sessionid</span>)
+</span></span><span style=display:flex><span><span style=color:#66d9ef>var</span> <span style=color:#a6e22e>params</span> <span style=color:#f92672>=</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>p_username</span> <span style=color:#f92672>+</span>
+</span></span><span style=display:flex><span>  <span style=color:#e6db74>&#39;=&#39;</span> <span style=color:#f92672>+</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>username</span> <span style=color:#f92672>+</span>
+</span></span><span style=display:flex><span>  <span style=color:#e6db74>&#39;&amp;&#39;</span> <span style=color:#f92672>+</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>p_password</span> <span style=color:#f92672>+</span>
+</span></span><span style=display:flex><span>  <span style=color:#e6db74>&#39;=&#39;</span> <span style=color:#f92672>+</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>password</span> <span style=color:#f92672>+</span>
+</span></span><span style=display:flex><span>  <span style=color:#e6db74>&#39;&amp;randnumber=&#39;</span> <span style=color:#f92672>+</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>randnumber</span> <span style=color:#f92672>+</span>
+</span></span><span style=display:flex><span>  <span style=color:#e6db74>&#39;&amp;isPasswordPolicy=&#39;</span> <span style=color:#f92672>+</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>passwordPolicy</span> <span style=color:#f92672>+</span>
+</span></span><span style=display:flex><span>  <span style=color:#e6db74>&#39;&amp;txt_mm_expression=&#39;</span> <span style=color:#f92672>+</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>txt_mm_expression</span> <span style=color:#f92672>+</span>
+</span></span><span style=display:flex><span>  <span style=color:#e6db74>&#39;&amp;txt_mm_length=&#39;</span> <span style=color:#f92672>+</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>txt_mm_length</span> <span style=color:#f92672>+</span>
+</span></span><span style=display:flex><span>  <span style=color:#e6db74>&#39;&amp;txt_mm_userzh=&#39;</span> <span style=color:#f92672>+</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>txt_mm_userzh</span>
+</span></span></code></pre></div><p>然后将<code>params</code> 用<code>getEncParams</code> 函数加密</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=display:flex><span><span style=color:#a6e22e>params</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>getEncParams</span>(<span style=color:#a6e22e>params</span>)
+</span></span></code></pre></div><p>然后发现他在另一个 JavaScript 文件里</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-html data-lang=html><span style=display:flex><span>&lt;<span style=color:#f92672>script</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>type</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;text/javascript&#34;</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>src</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;/suzxyjw/custom/js/SetKingoEncypt.jsp?t=4901586828474712746&#34;</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>id</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;kingo_encypt&#34;</span>
+</span></span><span style=display:flex><span>&gt;&lt;/<span style=color:#f92672>script</span>&gt;
+</span></span></code></pre></div><p>但是这个 JavaScript 文件后面的链接 t 后面的参数是 刷新一次网页就会变的,所以我们要用正则表达式进行提取 <code>/suzxyjw/custom/js/SetKingoEncypt.jsp\?t=[0-9]+</code></p><p>然后打开这个 JavaScript 脚本</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=display:flex><span><span style=color:#66d9ef>var</span> <span style=color:#a6e22e>_deskey</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;6061586830242491265&#39;</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>var</span> <span style=color:#a6e22e>_nowtime</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;2020-04-14 10:10:42&#39;</span>
+</span></span><span style=display:flex><span>document.<span style=color:#a6e22e>write</span>(
+</span></span><span style=display:flex><span>  <span style=color:#e6db74>&#34;&lt;script type=&#39;text/javascript&#39; src=&#39;http://211.86.128.194:80/suzxyjw/custom/js/base64.js&#39;&gt;&lt;/script&gt;&#34;</span>
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>document.<span style=color:#a6e22e>write</span>(
+</span></span><span style=display:flex><span>  <span style=color:#e6db74>&#34;&lt;script type=&#39;text/javascript&#39; src=&#39;http://211.86.128.194:80/suzxyjw/custom/js/md5.js&#39;&gt;&lt;/script&gt;&#34;</span>
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>document.<span style=color:#a6e22e>write</span>(
+</span></span><span style=display:flex><span>  <span style=color:#e6db74>&#34;&lt;script type=&#39;text/javascript&#39; src=&#39;http://211.86.128.194:80/suzxyjw/custom/js/jkingo.des.js&#39;&gt;&lt;/script&gt;&#34;</span>
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span><span style=color:#66d9ef>function</span> <span style=color:#a6e22e>b64_encode</span>(<span style=color:#a6e22e>data</span>) {
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>base64encode</span>(<span style=color:#a6e22e>utf16to8</span>(<span style=color:#a6e22e>data</span>))
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#66d9ef>function</span> <span style=color:#a6e22e>b64_decode</span>(<span style=color:#a6e22e>data</span>) {
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>utf8to16</span>(<span style=color:#a6e22e>base64decode</span>(<span style=color:#a6e22e>data</span>))
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#66d9ef>function</span> <span style=color:#a6e22e>md5</span>(<span style=color:#a6e22e>data</span>) {
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>hex_md5</span>(<span style=color:#a6e22e>data</span>)
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#66d9ef>function</span> <span style=color:#a6e22e>des_encode</span>(<span style=color:#a6e22e>data</span>) {
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>strEnc</span>(<span style=color:#a6e22e>data</span>, <span style=color:#a6e22e>_deskey</span>, <span style=color:#66d9ef>null</span>, <span style=color:#66d9ef>null</span>)
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#66d9ef>function</span> <span style=color:#a6e22e>des_decode</span>(<span style=color:#a6e22e>data</span>) {
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>strDec</span>(<span style=color:#a6e22e>data</span>, <span style=color:#a6e22e>_deskey</span>, <span style=color:#66d9ef>null</span>, <span style=color:#66d9ef>null</span>)
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#66d9ef>function</span> <span style=color:#a6e22e>getEncParams</span>(<span style=color:#a6e22e>params</span>) {
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>timestamp</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>_nowtime</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>token</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>md5</span>(<span style=color:#a6e22e>md5</span>(<span style=color:#a6e22e>params</span>) <span style=color:#f92672>+</span> <span style=color:#a6e22e>md5</span>(<span style=color:#a6e22e>timestamp</span>))
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>_params</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>b64_encode</span>(<span style=color:#a6e22e>des_encode</span>(<span style=color:#a6e22e>params</span>))
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>_params</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;params=&#39;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>_params</span> <span style=color:#f92672>+</span> <span style=color:#e6db74>&#39;&amp;token=&#39;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>token</span> <span style=color:#f92672>+</span> <span style=color:#e6db74>&#39;&amp;timestamp=&#39;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>timestamp</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>_params</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#66d9ef>function</span> <span style=color:#a6e22e>reloadScript00</span>(<span style=color:#a6e22e>id</span>, <span style=color:#a6e22e>jsfile</span>) {
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>jsfile</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>jsfile</span> <span style=color:#f92672>+</span> <span style=color:#e6db74>&#39;?random=&#39;</span> <span style=color:#f92672>+</span> Math.<span style=color:#a6e22e>random</span>()
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>id</span> <span style=color:#f92672>==</span> <span style=color:#e6db74>&#39;kingo_encypt&#39;</span>) document.<span style=color:#a6e22e>getElementById</span>(<span style=color:#e6db74>&#39;kingo_encypt&#39;</span>).<span style=color:#a6e22e>src</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>jsfile</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#66d9ef>function</span> <span style=color:#a6e22e>reloadScript</span>(<span style=color:#a6e22e>id</span>, <span style=color:#a6e22e>jsfile</span>) {
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>oldS</span> <span style=color:#f92672>=</span> document.<span style=color:#a6e22e>getElementById</span>(<span style=color:#a6e22e>id</span>)
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>oldS</span>) <span style=color:#a6e22e>oldS</span>.<span style=color:#a6e22e>parentNode</span>.<span style=color:#a6e22e>removeChild</span>(<span style=color:#a6e22e>oldS</span>)
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>t</span> <span style=color:#f92672>=</span> document.<span style=color:#a6e22e>createElement</span>(<span style=color:#e6db74>&#39;script&#39;</span>)
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>if</span> (<span style=color:#66d9ef>new</span> String(<span style=color:#a6e22e>jsfile</span>).<span style=color:#a6e22e>indexOf</span>(<span style=color:#e6db74>&#39;?&#39;</span>) <span style=color:#f92672>&gt;</span> <span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>jsfile</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>jsfile</span> <span style=color:#f92672>+</span> <span style=color:#e6db74>&#39;&amp;random=&#39;</span> <span style=color:#f92672>+</span> Math.<span style=color:#a6e22e>random</span>()
+</span></span><span style=display:flex><span>  } <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>jsfile</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>jsfile</span> <span style=color:#f92672>+</span> <span style=color:#e6db74>&#39;?random=&#39;</span> <span style=color:#f92672>+</span> Math.<span style=color:#a6e22e>random</span>()
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>t</span>.<span style=color:#a6e22e>src</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>jsfile</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>t</span>.<span style=color:#a6e22e>type</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;text/javascript&#39;</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>t</span>.<span style=color:#a6e22e>id</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>id</span>
+</span></span><span style=display:flex><span>  document.<span style=color:#a6e22e>getElementsByTagName</span>(<span style=color:#e6db74>&#39;head&#39;</span>)[<span style=color:#ae81ff>0</span>].<span style=color:#a6e22e>appendChild</span>(<span style=color:#a6e22e>t</span>)
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#66d9ef>var</span> <span style=color:#a6e22e>G_LOGIN_ID</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;kingo.guest&#39;</span>
+</span></span></code></pre></div><p>发现<code>getEncParams</code> 这个函数里面有一个函数<code>des_encode</code></p><p>这个<code>des_encode</code> 里面有一个函数 <code>strEnc(data, _deskey, null, null)</code></p><p><code>strEnc</code> 接受四个参数 <code>data</code>, <code>firstKey</code>, <code>secondKey</code>, <code>thirdKey</code>.</p><blockquote><p>jkingo.des.js 链接我将放置文章末尾</p></blockquote><p>这里有个坑就是我们访问这个<code>SetKingoEncypt.jsp</code> 链接是 我们必须要携带 Cookie 访问, 而且每次访问出来的<code>_deskey</code>, <code>_nowtime</code> 都是不一样的, 这里我们还是要进行字符串的提取可以用正则也可以用其他的.</p><h3 id=提交登陆信息>提交登陆信息</h3><p>最后通过 Post 请求发送数据表单</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=display:flex><span><span style=color:#e6db74>&#39;params=&#39;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>_params</span> <span style=color:#f92672>+</span> <span style=color:#e6db74>&#39;&amp;token=&#39;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>token</span> <span style=color:#f92672>+</span> <span style=color:#e6db74>&#39;&amp;timestamp=&#39;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>timestamp</span>
+</span></span></code></pre></div><p>表单总共有三个数据 <code>params</code>, <code>token</code>, <code>timestamp</code></p><p>最后发送 POST 请求后可以得到如下的 JSON 数据</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>{
+</span></span><span style=display:flex><span>  <span style=color:#f92672>&#34;message&#34;</span>: <span style=color:#e6db74>&#34;操作成功!&#34;</span>,
+</span></span><span style=display:flex><span>  <span style=color:#f92672>&#34;result&#34;</span>: <span style=color:#e6db74>&#34;/suzxyjw/MainFrm.html?random=0.14040851742858051&#34;</span>,
+</span></span><span style=display:flex><span>  <span style=color:#f92672>&#34;status&#34;</span>: <span style=color:#e6db74>&#34;200&#34;</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>最后就可以用 CookIe 进行其他的操作了.</p><blockquote><p><a href=http://211.86.128.194:80/suzxyjw/custom/js/jkingo.des.js target=_blank rel="noopener noreferrer">jkingo.des.js</a></p><p><a href=https://github.com/52funny/KINGOSOFT-LOGIN target=_blank rel="noopener noreferrer">演示代码(仅供参考)</a></p></blockquote></article><section class="article labels"><a class=tag href=/tags/go/>Go</a></section></div><div class="article bottom"><section class="article navigation"><p><a class=link href=/posts/014/><span class="iconfont icon-article"></span>API接口</a></p><p><a class=link href=/posts/012/><span class="iconfont icon-article"></span>超星学习通签到</a></p></section></div></section><section id=footer><div class=footer-wrap><p class=copyright>52funny Blog</p><p class=powerby><span>Powered&nbsp;by&nbsp;</span><a href=https://gohugo.io target=_blank rel="noopener noreferrer">Hugo</a><span>&nbsp;&&nbsp;</span><a href=https://themes.gohugo.io/hugo-notepadium/ target=_blank rel="noopener noreferrer">Notepadium</a></p></div></section><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css integrity=sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq crossorigin=anonymous><script defer src=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js integrity=sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz crossorigin=anonymous></script><script defer src=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js integrity=sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI crossorigin=anonymous onload=renderMathInElement(document.body)></script></body></html>
