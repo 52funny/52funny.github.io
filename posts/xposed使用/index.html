@@ -1,0 +1,38 @@
+<!doctype html><html lang=zh-hans><meta charset=utf-8><meta name=generator content="Hugo 0.98.0"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name=color-scheme content="light dark"><meta name=supported-color-schemes content="light dark"><title>Xposed使用&nbsp;&ndash;&nbsp;52funny Blog</title><link rel=stylesheet href=/css/core.min.ce377468f8d4eea57a095f8d4581a56bae44d81643a42e5e1ae36b10a2a1eb4e3fcd37985f285ccc586eb563916c2d3a.css integrity=sha384-zjd0aPjU7qV6CV+NRYGla65E2BZDpC5eGuNrEKKh604/zTeYXyhczFhutWORbC06><meta name=twitter:card content="summary"><meta name=twitter:title content="Xposed使用"><body><section id=header><div class="header wrap"><span class="header left-side"><a class="site home" href=/><span class="site name">52funny Blog</span></a></span>
+<span class="header right-side"><div class="nav wrap"><nav class=nav><a class="nav item" href=/categories/></a><a class="nav item" href=/tags/></a><a class="nav item" href=/friends>Friends</a><a class="nav item" href=/about>About</a></nav></div></span></div><div class="site slogan"><span class=title>< Code /></span></div></section><section id=content><div class=article-container><section class="article header"><h1 class="article title">Xposed使用</h1><p class="article date">2022-05-03</p></section><article class="article markdown-body"><p>简单介绍一下编写xposed的过程</p><h2 id=导入xposed>导入Xposed</h2><pre tabindex=0><code>dependencies {
+    compileOnly &#39;de.robv.android.xposed:api:82&#39;
+    compileOnly &#39;de.robv.android.xposed:api:82:sources&#39;
+}
+</code></pre><blockquote><p>注意要在<code>settings.gradle</code>里面加入xposed的maven库</p></blockquote><pre tabindex=0><code>dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        maven { url &#39;https://api.xposed.info/&#39;}
+    }
+}
+</code></pre><h2 id=在androidmanifestxml中导入配置信息>在<code>AndroidManifest.xml</code>中导入配置信息</h2><p>需要在<code>AndroidManifest.xml</code>中加入三个配置</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-xml data-lang=xml><span style=display:flex><span><span style=color:#f92672>&lt;application</span>
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>android:allowBackup=</span><span style=color:#e6db74>&#34;true&#34;</span>
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>android:icon=</span><span style=color:#e6db74>&#34;@mipmap/ic_launcher&#34;</span>
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>android:label=</span><span style=color:#e6db74>&#34;@string/app_name&#34;</span>
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>android:roundIcon=</span><span style=color:#e6db74>&#34;@mipmap/ic_launcher_round&#34;</span>
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>android:supportsRtl=</span><span style=color:#e6db74>&#34;true&#34;</span>
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>android:theme=</span><span style=color:#e6db74>&#34;@style/Theme.Demo_xposed&#34;</span> <span style=color:#f92672>&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>&lt;meta-data</span>
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>android:name=</span><span style=color:#e6db74>&#34;xposedmodule&#34;</span>
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>android:value=</span><span style=color:#e6db74>&#34;true&#34;</span> <span style=color:#f92672>/&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>&lt;meta-data</span>
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>android:name=</span><span style=color:#e6db74>&#34;xposeddescription&#34;</span>
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>android:value=</span><span style=color:#e6db74>&#34;Easy example which makes the status bar clock red and adds a smiley&#34;</span> <span style=color:#f92672>/&gt;</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>&lt;meta-data</span>
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>android:name=</span><span style=color:#e6db74>&#34;xposedminversion&#34;</span>
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>android:value=</span><span style=color:#e6db74>&#34;42+&#34;</span> <span style=color:#f92672>/&gt;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&lt;/application&gt;</span>
+</span></span></code></pre></div><ul><li><code>xposedmodule</code> 是否是xposed模块</li><li><code>xposeddescription</code> 指定模块的描述信息</li><li><code>xposedminversion</code> 指定其xposed的版本</li></ul><h2 id=在assets文件夹中写入xposed_init文件>在assets文件夹中写入<code>xposed_init</code>文件</h2><p>在assets中新建一个文本文件名字叫做<code>xposed_init</code></p><p>里面填入需要xposed hook的主类，比如: <code>com.funny.demo_xposed.Main</code></p><p>里面简单写一个Java代码</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>HelloXp</span> <span style=color:#66d9ef>implements</span> IXposedHookLoadPackage <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>final</span> String TAG <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;demo_xposed&#34;</span><span style=color:#f92672>;</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>@Override</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>handleLoadPackage</span><span style=color:#f92672>(</span>XC_LoadPackage<span style=color:#f92672>.</span><span style=color:#a6e22e>LoadPackageParam</span> lpparam<span style=color:#f92672>)</span> <span style=color:#66d9ef>throws</span> Throwable <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>    		Log<span style=color:#f92672>.</span><span style=color:#a6e22e>d</span><span style=color:#f92672>(</span><span style=color:#e6db74>&#34;xposed_demo&#34;</span><span style=color:#f92672>,</span> <span style=color:#e6db74>&#34;Hook Success!&#34;</span><span style=color:#f92672>);</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>}</span>
+</span></span></code></pre></div></article><section class="article labels"><a class=tag href=/tags/xposed/>xposed</a><a class=tag href=/tags/android/>android</a></section></div><div class="article bottom"><section class="article navigation"><p><a class=link href=/posts/014/><span class="iconfont icon-article"></span>API接口</a></p></section></div></section><section id=footer><div class=footer-wrap><p class=copyright>52funny Blog</p><p class=powerby><span>Powered&nbsp;by&nbsp;</span><a href=https://gohugo.io target=_blank rel="noopener noreferrer">Hugo</a><span>&nbsp;&&nbsp;</span><a href=https://themes.gohugo.io/hugo-notepadium/ target=_blank rel="noopener noreferrer">Notepadium</a></p></div></section></body></html>
