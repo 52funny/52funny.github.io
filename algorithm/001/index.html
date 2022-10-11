@@ -1,0 +1,288 @@
+<!doctype html><html lang=zh-hans><meta charset=utf-8><meta name=generator content="Hugo 0.104.3"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name=color-scheme content="light dark"><meta name=supported-color-schemes content="light dark"><title>第一周&nbsp;&ndash;&nbsp;52funny Blog</title><link rel=stylesheet href=/css/core.min.ce377468f8d4eea57a095f8d4581a56bae44d81643a42e5e1ae36b10a2a1eb4e3fcd37985f285ccc586eb563916c2d3a.css integrity=sha384-zjd0aPjU7qV6CV+NRYGla65E2BZDpC5eGuNrEKKh604/zTeYXyhczFhutWORbC06><meta name=twitter:card content="summary"><meta name=twitter:title content="第一周"><body><section id=header><div class="header wrap"><span class="header left-side"><a class="site home" href=/><span class="site name">52funny Blog</span></a></span>
+<span class="header right-side"><div class="nav wrap"><nav class=nav><a class="nav item" href=/categories/></a><a class="nav item" href=/tags/></a><a class="nav item" href=/algorithm>Algorithm</a><a class="nav item" href=/friends>Friends</a><a class="nav item" href=/about>About</a></nav></div></span></div><div class="site slogan"><span class=title>< Code /></span></div></section><section id=content><div class=article-container><section class="article header"><h1 class="article title">第一周</h1><p class="article date">2022-10-11</p></section><article class="article markdown-body"><h3 id=1404-number-of-steps-to-reduce-a-number-in-binary-representation-to-onehttpsleetcodecnproblemsnumber-of-steps-to-reduce-a-number-in-binary-representation-to-one><a href=https://leetcode.cn/problems/number-of-steps-to-reduce-a-number-in-binary-representation-to-one/ target=_blank rel="noopener noreferrer">1404. Number of Steps to Reduce a Number in Binary Representation to One</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=display:flex><span><span style=color:#66d9ef>impl</span> Solution {
+</span></span><span style=display:flex><span>     <span style=color:#66d9ef>pub</span> <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>num_steps</span>(s: String) -&gt; <span style=color:#66d9ef>i32</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>let</span> s <span style=color:#f92672>=</span> <span style=color:#f92672>&amp;</span><span style=color:#66d9ef>mut</span> Vec::from(s);
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>let</span> <span style=color:#66d9ef>mut</span> res <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>while</span> <span style=color:#f92672>!</span>(s.len() <span style=color:#f92672>==</span> <span style=color:#ae81ff>1</span> <span style=color:#f92672>&amp;&amp;</span> s[<span style=color:#ae81ff>0</span>] <span style=color:#f92672>==</span> <span style=color:#e6db74>&#39;1&#39;</span> <span style=color:#66d9ef>as</span> <span style=color:#66d9ef>u8</span>) {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> s[s.len() <span style=color:#f92672>-</span> <span style=color:#ae81ff>1</span>] <span style=color:#f92672>==</span> <span style=color:#e6db74>&#39;1&#39;</span> <span style=color:#66d9ef>as</span> <span style=color:#66d9ef>u8</span> {
+</span></span><span style=display:flex><span>                Self::jump(s, s.len() <span style=color:#f92672>-</span> <span style=color:#ae81ff>1</span>);
+</span></span><span style=display:flex><span>            } <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>                s.pop();
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            res <span style=color:#f92672>+=</span> <span style=color:#ae81ff>1</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        res
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>pub</span> <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>jump</span>(s: <span style=color:#66d9ef>&amp;</span><span style=color:#a6e22e>mut</span> Vec<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>u8</span><span style=color:#f92672>&gt;</span>, index: <span style=color:#66d9ef>usize</span>) {
+</span></span><span style=display:flex><span>        s[index] <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;0&#39;</span> <span style=color:#66d9ef>as</span> <span style=color:#66d9ef>u8</span>;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>for</span> i <span style=color:#66d9ef>in</span> (<span style=color:#ae81ff>0</span><span style=color:#f92672>..</span>index).rev() {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> s[i] <span style=color:#f92672>==</span> <span style=color:#e6db74>&#39;1&#39;</span> <span style=color:#66d9ef>as</span> <span style=color:#66d9ef>u8</span> {
+</span></span><span style=display:flex><span>                s[i] <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;0&#39;</span> <span style=color:#66d9ef>as</span> <span style=color:#66d9ef>u8</span>;
+</span></span><span style=display:flex><span>            } <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>                s[i] <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;1&#39;</span> <span style=color:#66d9ef>as</span> <span style=color:#66d9ef>u8</span>;
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        s[<span style=color:#ae81ff>0</span>] <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;0&#39;</span> <span style=color:#66d9ef>as</span> <span style=color:#66d9ef>u8</span>;
+</span></span><span style=display:flex><span>        s.insert(<span style=color:#ae81ff>0</span>, <span style=color:#e6db74>&#39;1&#39;</span> <span style=color:#66d9ef>as</span> <span style=color:#66d9ef>u8</span>);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h3 id=1405-longest-happy-stringhttpsleetcodecnproblemslongest-happy-string><a href=https://leetcode.cn/problems/longest-happy-string/ target=_blank rel="noopener noreferrer">1405. Longest Happy String</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=display:flex><span><span style=color:#66d9ef>impl</span> Solution {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>pub</span> <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>longest_diverse_string</span>(<span style=color:#66d9ef>mut</span> a: <span style=color:#66d9ef>i32</span>, <span style=color:#66d9ef>mut</span> b: <span style=color:#66d9ef>i32</span>, <span style=color:#66d9ef>mut</span> c: <span style=color:#66d9ef>i32</span>) -&gt; String { 
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>let</span> <span style=color:#66d9ef>mut</span> v <span style=color:#f92672>=</span> String::new();
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>let</span> (<span style=color:#66d9ef>mut</span> a_use, <span style=color:#66d9ef>mut</span> b_use, <span style=color:#66d9ef>mut</span> c_use) <span style=color:#f92672>=</span> (<span style=color:#ae81ff>0</span>, <span style=color:#ae81ff>0</span>, <span style=color:#ae81ff>0</span>);
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>let</span> total <span style=color:#f92672>=</span> a <span style=color:#f92672>+</span> b <span style=color:#f92672>+</span> c;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>for</span> _ <span style=color:#66d9ef>in</span> (<span style=color:#ae81ff>0</span><span style=color:#f92672>..</span>total) {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> (a <span style=color:#f92672>&gt;=</span> b <span style=color:#f92672>&amp;&amp;</span> a <span style=color:#f92672>&gt;=</span> c <span style=color:#f92672>&amp;&amp;</span> a_use <span style=color:#f92672>!=</span> <span style=color:#ae81ff>2</span>) <span style=color:#f92672>||</span> (b_use <span style=color:#f92672>==</span> <span style=color:#ae81ff>2</span> <span style=color:#f92672>&amp;&amp;</span> a <span style=color:#f92672>&gt;</span> <span style=color:#ae81ff>0</span>) <span style=color:#f92672>||</span> (c_use <span style=color:#f92672>==</span> <span style=color:#ae81ff>2</span> <span style=color:#f92672>&amp;&amp;</span> a <span style=color:#f92672>&gt;</span> <span style=color:#ae81ff>0</span>) {
+</span></span><span style=display:flex><span>                v.push(<span style=color:#e6db74>&#39;a&#39;</span>);
+</span></span><span style=display:flex><span>                a_use <span style=color:#f92672>+=</span> <span style=color:#ae81ff>1</span>;
+</span></span><span style=display:flex><span>                a <span style=color:#f92672>-=</span> <span style=color:#ae81ff>1</span>;
+</span></span><span style=display:flex><span>                b_use <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>                c_use <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>            } <span style=color:#66d9ef>else</span> <span style=color:#66d9ef>if</span> (b <span style=color:#f92672>&gt;=</span> a <span style=color:#f92672>&amp;&amp;</span> b <span style=color:#f92672>&gt;=</span> c <span style=color:#f92672>&amp;&amp;</span> b_use <span style=color:#f92672>!=</span> <span style=color:#ae81ff>2</span>)
+</span></span><span style=display:flex><span>                <span style=color:#f92672>||</span> (a_use <span style=color:#f92672>==</span> <span style=color:#ae81ff>2</span> <span style=color:#f92672>&amp;&amp;</span> b <span style=color:#f92672>&gt;</span> <span style=color:#ae81ff>0</span>)
+</span></span><span style=display:flex><span>                <span style=color:#f92672>||</span> (c_use <span style=color:#f92672>==</span> <span style=color:#ae81ff>2</span> <span style=color:#f92672>&amp;&amp;</span> b <span style=color:#f92672>&gt;</span> <span style=color:#ae81ff>0</span>)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                v.push(<span style=color:#e6db74>&#39;b&#39;</span>);
+</span></span><span style=display:flex><span>                b_use <span style=color:#f92672>+=</span> <span style=color:#ae81ff>1</span>;
+</span></span><span style=display:flex><span>                b <span style=color:#f92672>-=</span> <span style=color:#ae81ff>1</span>;
+</span></span><span style=display:flex><span>                a_use <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>                c_use <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>            } <span style=color:#66d9ef>else</span> <span style=color:#66d9ef>if</span> (c <span style=color:#f92672>&gt;=</span> a <span style=color:#f92672>&amp;&amp;</span> c <span style=color:#f92672>&gt;=</span> b <span style=color:#f92672>&amp;&amp;</span> c_use <span style=color:#f92672>!=</span> <span style=color:#ae81ff>2</span>)
+</span></span><span style=display:flex><span>                <span style=color:#f92672>||</span> (a_use <span style=color:#f92672>==</span> <span style=color:#ae81ff>2</span> <span style=color:#f92672>&amp;&amp;</span> c <span style=color:#f92672>&gt;</span> <span style=color:#ae81ff>0</span>)
+</span></span><span style=display:flex><span>                <span style=color:#f92672>||</span> (b_use <span style=color:#f92672>==</span> <span style=color:#ae81ff>2</span> <span style=color:#f92672>&amp;&amp;</span> c <span style=color:#f92672>&gt;</span> <span style=color:#ae81ff>0</span>)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                v.push(<span style=color:#e6db74>&#39;c&#39;</span>);
+</span></span><span style=display:flex><span>                c_use <span style=color:#f92672>+=</span> <span style=color:#ae81ff>1</span>;
+</span></span><span style=display:flex><span>                c <span style=color:#f92672>-=</span> <span style=color:#ae81ff>1</span>;
+</span></span><span style=display:flex><span>                a_use <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>                b_use <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        v
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h3 id=6-zigzag-conversionhttpsleetcodecnproblemszigzag-conversion><a href=https://leetcode.cn/problems/zigzag-conversion/ target=_blank rel="noopener noreferrer">6. Zigzag Conversion</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=display:flex><span><span style=color:#66d9ef>impl</span> Solution {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>pub</span> <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>convert</span>(s: String, num_rows: <span style=color:#66d9ef>i32</span>) -&gt; String {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> num_rows <span style=color:#f92672>==</span> <span style=color:#ae81ff>1</span> <span style=color:#f92672>||</span> s.len() <span style=color:#f92672>&lt;</span> num_rows <span style=color:#66d9ef>as</span> <span style=color:#66d9ef>usize</span> {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> s;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>let</span> num_rows <span style=color:#f92672>=</span> num_rows <span style=color:#66d9ef>as</span> <span style=color:#66d9ef>usize</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>let</span> col <span style=color:#f92672>=</span> s.len();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// println!(&#34;row: {}, col: {}&#34;, num_rows, col);
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>let</span> <span style=color:#66d9ef>mut</span> str_arr: Vec<span style=color:#f92672>&lt;</span>Vec<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>char</span><span style=color:#f92672>&gt;&gt;</span> <span style=color:#f92672>=</span> (<span style=color:#ae81ff>0</span><span style=color:#f92672>..=</span>num_rows).map(<span style=color:#f92672>|</span>_<span style=color:#f92672>|</span> vec![<span style=color:#ae81ff>0</span> <span style=color:#66d9ef>as</span> <span style=color:#66d9ef>char</span>; col]).collect();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>let</span> chars: Vec<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>char</span><span style=color:#f92672>&gt;</span> <span style=color:#f92672>=</span> s.chars().collect();
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// i is down
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>        <span style=color:#75715e>// j is right
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>        <span style=color:#66d9ef>let</span> (<span style=color:#66d9ef>mut</span> i, <span style=color:#66d9ef>mut</span> j) <span style=color:#f92672>=</span> (<span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>1</span>);
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>let</span> <span style=color:#66d9ef>mut</span> index <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>let</span> <span style=color:#66d9ef>mut</span> down <span style=color:#f92672>=</span> <span style=color:#66d9ef>true</span>;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>let</span> <span style=color:#66d9ef>mut</span> right <span style=color:#f92672>=</span> <span style=color:#66d9ef>false</span>;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>while</span> index <span style=color:#f92672>&lt;</span> s.len() {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// touch the bottom
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>            <span style=color:#75715e>// then move rigth
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>            println!(<span style=color:#e6db74>&#34;{}, {}&#34;</span>, i, j);
+</span></span><span style=display:flex><span>            str_arr[i][j] <span style=color:#f92672>=</span> chars[index];
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> down {
+</span></span><span style=display:flex><span>                i <span style=color:#f92672>+=</span> <span style=color:#ae81ff>1</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> right {
+</span></span><span style=display:flex><span>                i <span style=color:#f92672>-=</span> <span style=color:#ae81ff>1</span>;
+</span></span><span style=display:flex><span>                j <span style=color:#f92672>+=</span> <span style=color:#ae81ff>1</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> i <span style=color:#f92672>==</span> num_rows <span style=color:#66d9ef>as</span> <span style=color:#66d9ef>usize</span> {
+</span></span><span style=display:flex><span>                down <span style=color:#f92672>=</span> <span style=color:#66d9ef>false</span>;
+</span></span><span style=display:flex><span>                right <span style=color:#f92672>=</span> <span style=color:#66d9ef>true</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> i <span style=color:#f92672>==</span> <span style=color:#ae81ff>1</span> {
+</span></span><span style=display:flex><span>                right <span style=color:#f92672>=</span> <span style=color:#66d9ef>false</span>;
+</span></span><span style=display:flex><span>                down <span style=color:#f92672>=</span> <span style=color:#66d9ef>true</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            index <span style=color:#f92672>+=</span> <span style=color:#ae81ff>1</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>let</span> <span style=color:#66d9ef>mut</span> s <span style=color:#f92672>=</span> String::new();
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>for</span> row <span style=color:#66d9ef>in</span> str_arr.iter() {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// println!(&#34;{row:?}&#34;);
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>            <span style=color:#66d9ef>for</span> c <span style=color:#66d9ef>in</span> row.iter() {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>if</span> <span style=color:#f92672>*</span>c <span style=color:#f92672>!=</span> <span style=color:#ae81ff>0</span> <span style=color:#66d9ef>as</span> <span style=color:#66d9ef>char</span> {
+</span></span><span style=display:flex><span>                    s.push(<span style=color:#f92672>*</span>c);
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        s
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h3 id=面试题-0303-stack-of-plates-lccihttpsleetcodecnproblemsstack-of-plates-lcci><a href=https://leetcode.cn/problems/stack-of-plates-lcci/ target=_blank rel="noopener noreferrer">面试题 03.03. Stack of Plates LCCI</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=display:flex><span><span style=color:#75715e>#[derive(Debug)]</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>pub</span> <span style=color:#66d9ef>struct</span> <span style=color:#a6e22e>StackOfPlates</span> {
+</span></span><span style=display:flex><span>    data: Vec<span style=color:#f92672>&lt;</span>Vec<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>i32</span><span style=color:#f92672>&gt;&gt;</span>,
+</span></span><span style=display:flex><span>    cap: <span style=color:#66d9ef>i32</span>,
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#[allow(unused)]</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>impl</span> StackOfPlates {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>pub</span> <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>new</span>(cap: <span style=color:#66d9ef>i32</span>) -&gt; <span style=color:#a6e22e>Self</span> {
+</span></span><span style=display:flex><span>        StackOfPlates {
+</span></span><span style=display:flex><span>            data: Vec::new(),
+</span></span><span style=display:flex><span>            cap: <span style=color:#a6e22e>cap</span>,
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>pub</span> <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>push</span>(<span style=color:#f92672>&amp;</span><span style=color:#66d9ef>mut</span> self, val: <span style=color:#66d9ef>i32</span>) {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> self.cap <span style=color:#f92672>&lt;=</span> <span style=color:#ae81ff>0</span> {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>let</span> last <span style=color:#f92672>=</span> self.data.last_mut();
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> <span style=color:#66d9ef>let</span> Some(v) <span style=color:#f92672>=</span> last {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> v.len() <span style=color:#f92672>&lt;</span> self.cap <span style=color:#66d9ef>as</span> <span style=color:#66d9ef>usize</span> {
+</span></span><span style=display:flex><span>                v.push(val);
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>let</span> <span style=color:#66d9ef>mut</span> stack <span style=color:#f92672>=</span> Vec::with_capacity(self.cap <span style=color:#66d9ef>as</span> <span style=color:#66d9ef>usize</span>);
+</span></span><span style=display:flex><span>        stack.push(val);
+</span></span><span style=display:flex><span>        self.data.push(stack);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>pub</span> <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>pop</span>(<span style=color:#f92672>&amp;</span><span style=color:#66d9ef>mut</span> self) -&gt; <span style=color:#66d9ef>i32</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>let</span> last <span style=color:#f92672>=</span> self.data.last_mut();
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> <span style=color:#66d9ef>let</span> Some(v) <span style=color:#f92672>=</span> last {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> <span style=color:#66d9ef>let</span> Some(val) <span style=color:#f92672>=</span> v.pop() {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>if</span> v.is_empty() {
+</span></span><span style=display:flex><span>                    self.data.pop();
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span> val;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        <span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>pub</span> <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>pop_at</span>(<span style=color:#f92672>&amp;</span><span style=color:#66d9ef>mut</span> self, index: <span style=color:#66d9ef>i32</span>) -&gt; <span style=color:#66d9ef>i32</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>let</span> stack <span style=color:#f92672>=</span> self.data.get_mut(index <span style=color:#66d9ef>as</span> <span style=color:#66d9ef>usize</span>);
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> <span style=color:#66d9ef>let</span> Some(v) <span style=color:#f92672>=</span> stack {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> <span style=color:#66d9ef>let</span> Some(val) <span style=color:#f92672>=</span> v.pop() {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>if</span> v.is_empty() {
+</span></span><span style=display:flex><span>                    self.data.remove(index <span style=color:#66d9ef>as</span> <span style=color:#66d9ef>usize</span>);
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span> val;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        <span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h3 id=24-swap-nodes-in-pairshttpsleetcodecnproblemsswap-nodes-in-pairs><a href=https://leetcode.cn/problems/swap-nodes-in-pairs/ target=_blank rel="noopener noreferrer">24. Swap Nodes in Pairs</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=display:flex><span><span style=color:#75715e>// Definition for singly-linked list.
+</span></span></span><span style=display:flex><span><span style=color:#75715e>// #[derive(PartialEq, Eq, Clone, Debug)]
+</span></span></span><span style=display:flex><span><span style=color:#75715e>// pub struct ListNode {
+</span></span></span><span style=display:flex><span><span style=color:#75715e>//   pub val: i32,
+</span></span></span><span style=display:flex><span><span style=color:#75715e>//   pub next: Option&lt;Box&lt;ListNode&gt;&gt;
+</span></span></span><span style=display:flex><span><span style=color:#75715e>// }
+</span></span></span><span style=display:flex><span><span style=color:#75715e>//
+</span></span></span><span style=display:flex><span><span style=color:#75715e>// impl ListNode {
+</span></span></span><span style=display:flex><span><span style=color:#75715e>//   #[inline]
+</span></span></span><span style=display:flex><span><span style=color:#75715e>//   fn new(val: i32) -&gt; Self {
+</span></span></span><span style=display:flex><span><span style=color:#75715e>//     ListNode {
+</span></span></span><span style=display:flex><span><span style=color:#75715e>//       next: None,
+</span></span></span><span style=display:flex><span><span style=color:#75715e>//       val
+</span></span></span><span style=display:flex><span><span style=color:#75715e>//     }
+</span></span></span><span style=display:flex><span><span style=color:#75715e>//   }
+</span></span></span><span style=display:flex><span><span style=color:#75715e>// }
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>impl</span> Solution {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>pub</span> <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>swap_pairs</span>(head: Option<span style=color:#f92672>&lt;</span>Box<span style=color:#f92672>&lt;</span>ListNode<span style=color:#f92672>&gt;&gt;</span>) -&gt; Option<span style=color:#f92672>&lt;</span>Box<span style=color:#f92672>&lt;</span>ListNode<span style=color:#f92672>&gt;&gt;</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>let</span> <span style=color:#66d9ef>mut</span> prev <span style=color:#f92672>=</span> head;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>let</span> <span style=color:#66d9ef>mut</span> result <span style=color:#f92672>=</span> ListNode::new(<span style=color:#ae81ff>0</span>);
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>let</span> <span style=color:#66d9ef>mut</span> tail <span style=color:#f92672>=</span> <span style=color:#f92672>&amp;</span><span style=color:#66d9ef>mut</span> result;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>while</span> <span style=color:#66d9ef>let</span> Some(<span style=color:#66d9ef>mut</span> first) <span style=color:#f92672>=</span> prev {
+</span></span><span style=display:flex><span>            prev <span style=color:#f92672>=</span> first.next.take();
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> <span style=color:#66d9ef>let</span> Some(<span style=color:#66d9ef>mut</span> second) <span style=color:#f92672>=</span> prev {
+</span></span><span style=display:flex><span>                prev <span style=color:#f92672>=</span> second.next.take();
+</span></span><span style=display:flex><span>                second.next <span style=color:#f92672>=</span> Some(first);
+</span></span><span style=display:flex><span>                tail.next <span style=color:#f92672>=</span> Some(second);
+</span></span><span style=display:flex><span>                tail <span style=color:#f92672>=</span> tail.next.as_mut().unwrap().next.as_mut().unwrap();
+</span></span><span style=display:flex><span>            } <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>                tail.next <span style=color:#f92672>=</span> Some(first);
+</span></span><span style=display:flex><span>                tail <span style=color:#f92672>=</span> tail.next.as_mut().unwrap();
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        result.next
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h3 id=1685-sum-of-absolute-differences-in-a-sorted-arrayhttpsleetcodecnproblemssum-of-absolute-differences-in-a-sorted-array><a href=https://leetcode.cn/problems/sum-of-absolute-differences-in-a-sorted-array/ target=_blank rel="noopener noreferrer">1685. Sum of Absolute Differences in a Sorted Array</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=display:flex><span><span style=color:#66d9ef>impl</span> Solution {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>pub</span> <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>get_sum_absolute_differences</span>(nums: Vec<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>i32</span><span style=color:#f92672>&gt;</span>) -&gt; Vec<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>i32</span><span style=color:#f92672>&gt;</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>let</span> <span style=color:#66d9ef>mut</span> prefix_array: Vec<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>i32</span><span style=color:#f92672>&gt;</span> <span style=color:#f92672>=</span> Vec::with_capacity(nums.len());
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>let</span> <span style=color:#66d9ef>mut</span> result: Vec<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>i32</span><span style=color:#f92672>&gt;</span> <span style=color:#f92672>=</span> Vec::with_capacity(nums.len());
+</span></span><span style=display:flex><span>        prefix_array.push(nums[<span style=color:#ae81ff>0</span>]);
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>for</span> i <span style=color:#66d9ef>in</span> <span style=color:#ae81ff>1</span><span style=color:#f92672>..</span>nums.len() {
+</span></span><span style=display:flex><span>            prefix_array.push(prefix_array[i <span style=color:#f92672>-</span> <span style=color:#ae81ff>1</span>] <span style=color:#f92672>+</span> nums[i]);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>for</span> i <span style=color:#66d9ef>in</span> <span style=color:#ae81ff>0</span><span style=color:#f92672>..</span>nums.len() {
+</span></span><span style=display:flex><span>            result.push((i <span style=color:#66d9ef>as</span> <span style=color:#66d9ef>i32</span> <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span>) <span style=color:#f92672>*</span> nums[i] <span style=color:#f92672>-</span> prefix_array[i]
+</span></span><span style=display:flex><span>                <span style=color:#f92672>+</span> (prefix_array[nums.len() <span style=color:#f92672>-</span> <span style=color:#ae81ff>1</span>] <span style=color:#f92672>-</span> prefix_array[i])
+</span></span><span style=display:flex><span>                <span style=color:#f92672>-</span> nums[i] <span style=color:#f92672>*</span> (nums.len() <span style=color:#66d9ef>as</span> <span style=color:#66d9ef>i32</span> <span style=color:#f92672>-</span> <span style=color:#ae81ff>1</span> <span style=color:#f92672>-</span> i <span style=color:#66d9ef>as</span> <span style=color:#66d9ef>i32</span>));
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        result
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h3 id=面试题-0105-one-away-lccihttpsleetcodecnproblemsone-away-lcci><a href=https://leetcode.cn/problems/one-away-lcci/ target=_blank rel="noopener noreferrer">面试题 01.05. One Away LCCI</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=display:flex><span><span style=color:#66d9ef>impl</span> Solution {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>pub</span> <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>one_edit_away</span>(first: String, second: String) -&gt; <span style=color:#66d9ef>bool</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>let</span> max_str: <span style=color:#66d9ef>&amp;</span>String;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>let</span> min_str: <span style=color:#66d9ef>&amp;</span>String;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> first.len() <span style=color:#f92672>&gt;</span> second.len() {
+</span></span><span style=display:flex><span>            max_str <span style=color:#f92672>=</span> <span style=color:#f92672>&amp;</span>first;
+</span></span><span style=display:flex><span>            min_str <span style=color:#f92672>=</span> <span style=color:#f92672>&amp;</span>second;
+</span></span><span style=display:flex><span>        } <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>            max_str <span style=color:#f92672>=</span> <span style=color:#f92672>&amp;</span>second;
+</span></span><span style=display:flex><span>            min_str <span style=color:#f92672>=</span> <span style=color:#f92672>&amp;</span>first;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>let</span> point <span style=color:#f92672>=</span> first.len().max(second.len()) <span style=color:#f92672>-</span> first.len().min(second.len());
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> point <span style=color:#f92672>&gt;=</span> <span style=color:#ae81ff>2</span> {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>false</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>let</span> char1: Vec<span style=color:#f92672>&lt;</span>_<span style=color:#f92672>&gt;</span> <span style=color:#f92672>=</span> min_str.bytes().collect();
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>let</span> char2: Vec<span style=color:#f92672>&lt;</span>_<span style=color:#f92672>&gt;</span> <span style=color:#f92672>=</span> max_str.bytes().collect();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>match</span> point {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// must replace
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>            <span style=color:#ae81ff>0</span> <span style=color:#f92672>=&gt;</span> {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>let</span> <span style=color:#66d9ef>mut</span> diff <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>for</span> i <span style=color:#66d9ef>in</span> <span style=color:#ae81ff>0</span><span style=color:#f92672>..</span>first.len() {
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>if</span> char1[i] <span style=color:#f92672>!=</span> char2[i] {
+</span></span><span style=display:flex><span>                        diff <span style=color:#f92672>+=</span> <span style=color:#ae81ff>1</span>;
+</span></span><span style=display:flex><span>                    }
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>if</span> diff <span style=color:#f92672>==</span> <span style=color:#ae81ff>1</span> <span style=color:#f92672>||</span> diff <span style=color:#f92672>==</span> <span style=color:#ae81ff>0</span> {
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>true</span>;
+</span></span><span style=display:flex><span>                } <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>false</span>;
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// must insert or remove
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>            <span style=color:#ae81ff>1</span> <span style=color:#f92672>=&gt;</span> {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>let</span> <span style=color:#66d9ef>mut</span> index <span style=color:#f92672>=</span> <span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>;
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>for</span> i <span style=color:#66d9ef>in</span> <span style=color:#ae81ff>0</span><span style=color:#f92672>..</span>char1.len() {
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>if</span> char1[i] <span style=color:#f92672>!=</span> char2[i] {
+</span></span><span style=display:flex><span>                        index <span style=color:#f92672>=</span> i <span style=color:#66d9ef>as</span> <span style=color:#66d9ef>i32</span>;
+</span></span><span style=display:flex><span>                        <span style=color:#66d9ef>break</span>;
+</span></span><span style=display:flex><span>                    }
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>                <span style=color:#75715e>// means need insert in short string
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>                <span style=color:#66d9ef>if</span> index <span style=color:#f92672>==</span> <span style=color:#f92672>-</span><span style=color:#ae81ff>1</span> {
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>true</span>;
+</span></span><span style=display:flex><span>                } <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>let</span> i <span style=color:#f92672>=</span> index <span style=color:#66d9ef>as</span> <span style=color:#66d9ef>usize</span>;
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>return</span> char1[i<span style=color:#f92672>..</span>] <span style=color:#f92672>==</span> char2[i <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span><span style=color:#f92672>..</span>];
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>                <span style=color:#75715e>// if index + 1 &gt;= char2.len() {
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>                <span style=color:#75715e>//     return true;
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>                <span style=color:#75715e>// }
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>                <span style=color:#75715e>// true
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>            }
+</span></span><span style=display:flex><span>            _ <span style=color:#f92672>=&gt;</span> <span style=color:#66d9ef>false</span>,
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div></article><section class="article labels"><a class=tag href=/tags/leetcode/>leetcode</a></section></div><div class="article bottom"></div></section><section id=footer><div class=footer-wrap><p class=copyright>52funny Blog</p><p class=powerby><span>Powered&nbsp;by&nbsp;</span><a href=https://gohugo.io target=_blank rel="noopener noreferrer">Hugo</a><span>&nbsp;&&nbsp;</span><a href=https://themes.gohugo.io/hugo-notepadium/ target=_blank rel="noopener noreferrer">Notepadium</a></p></div></section></body></html>
