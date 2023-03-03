@@ -1,4 +1,62 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on 52funny Blog</title><link>https://52funny.github.io/posts/</link><description>Recent content in Posts on 52funny Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Tue, 03 May 2022 19:59:29 +0800</lastBuildDate><atom:link href="https://52funny.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>第一周</title><link>https://52funny.github.io/algorithm/001/</link><pubDate>Tue, 11 Oct 2022 19:55:47 +0800</pubDate><guid>https://52funny.github.io/algorithm/001/</guid><description>&lt;h3 id="1404-number-of-steps-to-reduce-a-number-in-binary-representation-to-onehttpsleetcodecnproblemsnumber-of-steps-to-reduce-a-number-in-binary-representation-to-one">&lt;a href="https://leetcode.cn/problems/number-of-steps-to-reduce-a-number-in-binary-representation-to-one/"target="_blank" rel="noopener noreferrer">1404. Number of Steps to Reduce a Number in Binary Representation to One&lt;/a>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on 52funny Blog</title><link>https://52funny.github.io/posts/</link><description>Recent content in Posts on 52funny Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Fri, 03 Mar 2023 22:08:28 +0800</lastBuildDate><atom:link href="https://52funny.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>全排序算法</title><link>https://52funny.github.io/posts/permutation/</link><pubDate>Fri, 03 Mar 2023 22:08:28 +0800</pubDate><guid>https://52funny.github.io/posts/permutation/</guid><description>&lt;p>对于全排序算法，我们只要对每个位置进行模拟，然后看每个位置可以放什么数，将对应的数放进位置中，之后不断的递归回溯，这样就可以找到所有的全排列。&lt;/p>
+&lt;p>&lt;img src="https://52funny.github.io/img/permutation.png"
+alt/>&lt;/p>
+&lt;p>下面给出 rust 代码：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-rust" data-lang="rust">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">fn&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">let&lt;/span> v &lt;span style="color:#f92672">=&lt;/span> vec![&lt;span style="color:#ae81ff">1&lt;/span>, &lt;span style="color:#ae81ff">2&lt;/span>, &lt;span style="color:#ae81ff">3&lt;/span>];
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">let&lt;/span> p &lt;span style="color:#f92672">=&lt;/span> Permutation::new(&lt;span style="color:#f92672">&amp;amp;&lt;/span>v);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">let&lt;/span> permutation_result &lt;span style="color:#f92672">=&lt;/span> p.permutation();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> println!(&lt;span style="color:#e6db74">&amp;#34;&lt;/span>&lt;span style="color:#e6db74">{:?}&lt;/span>&lt;span style="color:#e6db74">&amp;#34;&lt;/span>, permutation_result);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#[allow(dead_code)]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">pub&lt;/span> &lt;span style="color:#66d9ef">struct&lt;/span> &lt;span style="color:#a6e22e">Permutation&lt;/span>&lt;span style="color:#f92672">&amp;lt;&lt;/span>&lt;span style="color:#a6e22e">&amp;#39;a&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> vis: Vec&lt;span style="color:#f92672">&amp;lt;&lt;/span>&lt;span style="color:#66d9ef">bool&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> nums: &lt;span style="color:#66d9ef">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">&amp;#39;a&lt;/span> Vec&lt;span style="color:#f92672">&amp;lt;&lt;/span>&lt;span style="color:#66d9ef">i32&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> path: Vec&lt;span style="color:#f92672">&amp;lt;&lt;/span>&lt;span style="color:#66d9ef">i32&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> result: Vec&lt;span style="color:#f92672">&amp;lt;&lt;/span>Vec&lt;span style="color:#f92672">&amp;lt;&lt;/span>&lt;span style="color:#66d9ef">i32&lt;/span>&lt;span style="color:#f92672">&amp;gt;&amp;gt;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">impl&lt;/span>&lt;span style="color:#f92672">&amp;lt;&lt;/span>&lt;span style="color:#a6e22e">&amp;#39;a&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span> Permutation&lt;span style="color:#f92672">&amp;lt;&lt;/span>&lt;span style="color:#a6e22e">&amp;#39;a&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">pub&lt;/span> &lt;span style="color:#66d9ef">fn&lt;/span> &lt;span style="color:#a6e22e">new&lt;/span>(nums: &lt;span style="color:#66d9ef">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">&amp;#39;a&lt;/span> Vec&lt;span style="color:#f92672">&amp;lt;&lt;/span>&lt;span style="color:#66d9ef">i32&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span>) -&amp;gt; &lt;span style="color:#a6e22e">Self&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> Self {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> vis: &lt;span style="color:#a6e22e">vec&lt;/span>&lt;span style="color:#f92672">!&lt;/span>[&lt;span style="color:#66d9ef">false&lt;/span>; nums.len()],
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> path: &lt;span style="color:#a6e22e">vec&lt;/span>&lt;span style="color:#f92672">!&lt;/span>[&lt;span style="color:#ae81ff">0&lt;/span>; nums.len()],
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> result: &lt;span style="color:#a6e22e">vec&lt;/span>&lt;span style="color:#f92672">!&lt;/span>[],
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> nums,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> };
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">pub&lt;/span> &lt;span style="color:#66d9ef">fn&lt;/span> &lt;span style="color:#a6e22e">permutation&lt;/span>(&lt;span style="color:#66d9ef">mut&lt;/span> self) -&amp;gt; Vec&lt;span style="color:#f92672">&amp;lt;&lt;/span>Vec&lt;span style="color:#f92672">&amp;lt;&lt;/span>&lt;span style="color:#66d9ef">i32&lt;/span>&lt;span style="color:#f92672">&amp;gt;&amp;gt;&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Self::dfs(
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;amp;&lt;/span>self.nums,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#66d9ef">mut&lt;/span> self.vis,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#66d9ef">mut&lt;/span> self.path,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#66d9ef">mut&lt;/span> self.result,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ae81ff">0&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> );
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> self.result
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">fn&lt;/span> &lt;span style="color:#a6e22e">dfs&lt;/span>(
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> nums: &lt;span style="color:#66d9ef">&amp;amp;&lt;/span>Vec&lt;span style="color:#f92672">&amp;lt;&lt;/span>&lt;span style="color:#66d9ef">i32&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> vis: &lt;span style="color:#66d9ef">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">mut&lt;/span> Vec&lt;span style="color:#f92672">&amp;lt;&lt;/span>&lt;span style="color:#66d9ef">bool&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> path: &lt;span style="color:#66d9ef">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">mut&lt;/span> Vec&lt;span style="color:#f92672">&amp;lt;&lt;/span>&lt;span style="color:#66d9ef">i32&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> result: &lt;span style="color:#66d9ef">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">mut&lt;/span> Vec&lt;span style="color:#f92672">&amp;lt;&lt;/span>Vec&lt;span style="color:#f92672">&amp;lt;&lt;/span>&lt;span style="color:#66d9ef">i32&lt;/span>&lt;span style="color:#f92672">&amp;gt;&amp;gt;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> index: &lt;span style="color:#66d9ef">usize&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> index &lt;span style="color:#f92672">==&lt;/span> nums.len() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> result.push(path.clone());
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span> i &lt;span style="color:#66d9ef">in&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>&lt;span style="color:#f92672">..&lt;/span>nums.len() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#f92672">!&lt;/span>vis[i] {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> path[index] &lt;span style="color:#f92672">=&lt;/span> nums[i];
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> vis[i] &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">true&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Self::dfs(nums, vis, path, result, index &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> vis[i] &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">false&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>第一周</title><link>https://52funny.github.io/algorithm/001/</link><pubDate>Tue, 11 Oct 2022 19:55:47 +0800</pubDate><guid>https://52funny.github.io/algorithm/001/</guid><description>&lt;h3 id="1404-number-of-steps-to-reduce-a-number-in-binary-representation-to-onehttpsleetcodecnproblemsnumber-of-steps-to-reduce-a-number-in-binary-representation-to-one">&lt;a href="https://leetcode.cn/problems/number-of-steps-to-reduce-a-number-in-binary-representation-to-one/"target="_blank" rel="noopener noreferrer">1404. Number of Steps to Reduce a Number in Binary Representation to One&lt;/a>
 &lt;/h3>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-rust" data-lang="rust">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">impl&lt;/span> Solution {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">pub&lt;/span> &lt;span style="color:#66d9ef">fn&lt;/span> &lt;span style="color:#a6e22e">num_steps&lt;/span>(s: String) -&amp;gt; &lt;span style="color:#66d9ef">i32&lt;/span> {
@@ -90,7 +148,7 @@
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">while&lt;/span> index &lt;span style="color:#f92672">&amp;lt;&lt;/span> s.len() {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// touch the bottom
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// then move rigth
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> println!(&lt;span style="color:#e6db74">&amp;#34;{}, {}&amp;#34;&lt;/span>, i, j);
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> println!(&lt;span style="color:#e6db74">&amp;#34;&lt;/span>&lt;span style="color:#e6db74">{}&lt;/span>&lt;span style="color:#e6db74">, &lt;/span>&lt;span style="color:#e6db74">{}&lt;/span>&lt;span style="color:#e6db74">&amp;#34;&lt;/span>, i, j);
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> str_arr[i][j] &lt;span style="color:#f92672">=&lt;/span> chars[index];
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> down {
@@ -1520,12 +1578,4 @@ alt="Ariang"/>&lt;/p></description></item><item><title>判断字符是否唯一<
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">true&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>当然也可以用 C/C++来写，这里我就不演示了。&lt;/p></description></item><item><title>Docker基础</title><link>https://52funny.github.io/posts/007/</link><pubDate>Mon, 30 Dec 2019 23:14:42 +0800</pubDate><guid>https://52funny.github.io/posts/007/</guid><description>&lt;h3 id="docker-安装">docker 安装&lt;/h3>
-&lt;p>通过命令安装&lt;br>
-&lt;code>wget -qO- https://get.docker.com/ | sh&lt;/code>&lt;br>
-安装完毕后将普通用户加入到 docker 用户组（为的是让 docker 能让普通用户使用）&lt;br>
-&lt;code>sudo gpasswd -a ${USER} docker&lt;/code>&lt;br>
-然后重启 docker&lt;br>
-&lt;code>sudo systemctl restart docker&lt;/code>&lt;br>
-然后刷新用户组&lt;br>
-&lt;code>newgrp docker&lt;/code>&lt;/p></description></item></channel></rss>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>当然也可以用 C/C++来写，这里我就不演示了。&lt;/p></description></item></channel></rss>

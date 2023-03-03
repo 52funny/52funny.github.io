@@ -1,0 +1,56 @@
+<!doctype html><html lang=zh-hans><meta charset=utf-8><meta name=generator content="Hugo 0.111.1"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name=color-scheme content="light dark"><meta name=supported-color-schemes content="light dark"><title>全排序算法&nbsp;&ndash;&nbsp;52funny Blog</title><link rel=stylesheet href=/css/core.min.ce377468f8d4eea57a095f8d4581a56bae44d81643a42e5e1ae36b10a2a1eb4e3fcd37985f285ccc586eb563916c2d3a.css integrity=sha384-zjd0aPjU7qV6CV+NRYGla65E2BZDpC5eGuNrEKKh604/zTeYXyhczFhutWORbC06><meta name=twitter:card content="summary"><meta name=twitter:title content="全排序算法"><body><section id=header><div class="header wrap"><span class="header left-side"><a class="site home" href=/><span class="site name">52funny Blog</span></a></span>
+<span class="header right-side"><div class="nav wrap"><nav class=nav><a class="nav item" href=/categories/></a><a class="nav item" href=/tags/></a><a class="nav item" href=/algorithm>Algorithm</a><a class="nav item" href=/friends>Friends</a><a class="nav item" href=/about>About</a></nav></div></span></div><div class="site slogan"><span class=title>< Code /></span></div></section><section id=content><div class=article-container><section class="article header"><h1 class="article title">全排序算法</h1><p class="article date">2023-03-03</p></section><article class="article markdown-body"><p>对于全排序算法，我们只要对每个位置进行模拟，然后看每个位置可以放什么数，将对应的数放进位置中，之后不断的递归回溯，这样就可以找到所有的全排列。</p><p><img src=/img/permutation.png alt></p><p>下面给出 rust 代码：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=display:flex><span><span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>let</span> v <span style=color:#f92672>=</span> vec![<span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>2</span>, <span style=color:#ae81ff>3</span>];
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>let</span> p <span style=color:#f92672>=</span> Permutation::new(<span style=color:#f92672>&amp;</span>v);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>let</span> permutation_result <span style=color:#f92672>=</span> p.permutation();
+</span></span><span style=display:flex><span>    println!(<span style=color:#e6db74>&#34;</span><span style=color:#e6db74>{:?}</span><span style=color:#e6db74>&#34;</span>, permutation_result);
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#[allow(dead_code)]</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>pub</span> <span style=color:#66d9ef>struct</span> <span style=color:#a6e22e>Permutation</span><span style=color:#f92672>&lt;</span><span style=color:#a6e22e>&#39;a</span><span style=color:#f92672>&gt;</span> {
+</span></span><span style=display:flex><span>    vis: Vec<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>bool</span><span style=color:#f92672>&gt;</span>,
+</span></span><span style=display:flex><span>    nums: <span style=color:#66d9ef>&amp;</span><span style=color:#a6e22e>&#39;a</span> Vec<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>i32</span><span style=color:#f92672>&gt;</span>,
+</span></span><span style=display:flex><span>    path: Vec<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>i32</span><span style=color:#f92672>&gt;</span>,
+</span></span><span style=display:flex><span>    result: Vec<span style=color:#f92672>&lt;</span>Vec<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>i32</span><span style=color:#f92672>&gt;&gt;</span>,
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>impl</span><span style=color:#f92672>&lt;</span><span style=color:#a6e22e>&#39;a</span><span style=color:#f92672>&gt;</span> Permutation<span style=color:#f92672>&lt;</span><span style=color:#a6e22e>&#39;a</span><span style=color:#f92672>&gt;</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>pub</span> <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>new</span>(nums: <span style=color:#66d9ef>&amp;</span><span style=color:#a6e22e>&#39;a</span> Vec<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>i32</span><span style=color:#f92672>&gt;</span>) -&gt; <span style=color:#a6e22e>Self</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> Self {
+</span></span><span style=display:flex><span>            vis: <span style=color:#a6e22e>vec</span><span style=color:#f92672>!</span>[<span style=color:#66d9ef>false</span>; nums.len()],
+</span></span><span style=display:flex><span>            path: <span style=color:#a6e22e>vec</span><span style=color:#f92672>!</span>[<span style=color:#ae81ff>0</span>; nums.len()],
+</span></span><span style=display:flex><span>            result: <span style=color:#a6e22e>vec</span><span style=color:#f92672>!</span>[],
+</span></span><span style=display:flex><span>            nums,
+</span></span><span style=display:flex><span>        };
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>pub</span> <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>permutation</span>(<span style=color:#66d9ef>mut</span> self) -&gt; Vec<span style=color:#f92672>&lt;</span>Vec<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>i32</span><span style=color:#f92672>&gt;&gt;</span> {
+</span></span><span style=display:flex><span>        Self::dfs(
+</span></span><span style=display:flex><span>            <span style=color:#f92672>&amp;</span>self.nums,
+</span></span><span style=display:flex><span>            <span style=color:#f92672>&amp;</span><span style=color:#66d9ef>mut</span> self.vis,
+</span></span><span style=display:flex><span>            <span style=color:#f92672>&amp;</span><span style=color:#66d9ef>mut</span> self.path,
+</span></span><span style=display:flex><span>            <span style=color:#f92672>&amp;</span><span style=color:#66d9ef>mut</span> self.result,
+</span></span><span style=display:flex><span>            <span style=color:#ae81ff>0</span>,
+</span></span><span style=display:flex><span>        );
+</span></span><span style=display:flex><span>        self.result
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>dfs</span>(
+</span></span><span style=display:flex><span>        nums: <span style=color:#66d9ef>&amp;</span>Vec<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>i32</span><span style=color:#f92672>&gt;</span>,
+</span></span><span style=display:flex><span>        vis: <span style=color:#66d9ef>&amp;</span><span style=color:#a6e22e>mut</span> Vec<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>bool</span><span style=color:#f92672>&gt;</span>,
+</span></span><span style=display:flex><span>        path: <span style=color:#66d9ef>&amp;</span><span style=color:#a6e22e>mut</span> Vec<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>i32</span><span style=color:#f92672>&gt;</span>,
+</span></span><span style=display:flex><span>        result: <span style=color:#66d9ef>&amp;</span><span style=color:#a6e22e>mut</span> Vec<span style=color:#f92672>&lt;</span>Vec<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>i32</span><span style=color:#f92672>&gt;&gt;</span>,
+</span></span><span style=display:flex><span>        index: <span style=color:#66d9ef>usize</span>,
+</span></span><span style=display:flex><span>    ) {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> index <span style=color:#f92672>==</span> nums.len() {
+</span></span><span style=display:flex><span>            result.push(path.clone());
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>for</span> i <span style=color:#66d9ef>in</span> <span style=color:#ae81ff>0</span><span style=color:#f92672>..</span>nums.len() {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> <span style=color:#f92672>!</span>vis[i] {
+</span></span><span style=display:flex><span>                path[index] <span style=color:#f92672>=</span> nums[i];
+</span></span><span style=display:flex><span>                vis[i] <span style=color:#f92672>=</span> <span style=color:#66d9ef>true</span>;
+</span></span><span style=display:flex><span>                Self::dfs(nums, vis, path, result, index <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span>);
+</span></span><span style=display:flex><span>                vis[i] <span style=color:#f92672>=</span> <span style=color:#66d9ef>false</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div></article></div><div class="article bottom"><section class="article navigation"><p><a class=link href=/posts/xposed%E4%BD%BF%E7%94%A8/><span class="iconfont icon-article"></span>Xposed使用</a></p></section></div></section><section id=footer><div class=footer-wrap><p class=copyright>52funny Blog</p><p class=powerby><span>Powered&nbsp;by&nbsp;</span><a href=https://gohugo.io target=_blank rel="noopener noreferrer">Hugo</a><span>&nbsp;&&nbsp;</span><a href=https://themes.gohugo.io/hugo-notepadium/ target=_blank rel="noopener noreferrer">Notepadium</a></p></div></section></body></html>
