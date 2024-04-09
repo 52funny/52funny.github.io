@@ -1,4 +1,98 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>About on 52funny Blog</title><link>https://52funny.github.io/about/</link><description>Recent content in About on 52funny Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sat, 16 Jan 2021 10:47:02 +0800</lastBuildDate><atom:link href="https://52funny.github.io/about/index.xml" rel="self" type="application/rss+xml"/><item><title>全排序算法</title><link>https://52funny.github.io/posts/permutation/</link><pubDate>Fri, 03 Mar 2023 22:08:28 +0800</pubDate><guid>https://52funny.github.io/posts/permutation/</guid><description>&lt;p>对于全排序算法，我们只要对每个位置进行模拟，然后看每个位置可以放什么数，将对应的数放进位置中，之后不断的递归回溯，这样就可以找到所有的全排列。&lt;/p>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>About on 52funny Blog</title><link>https://52funny.github.io/about/</link><description>Recent content in About on 52funny Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sat, 16 Jan 2021 10:47:02 +0800</lastBuildDate><atom:link href="https://52funny.github.io/about/index.xml" rel="self" type="application/rss+xml"/><item><title>LRU Cache 算法</title><link>https://52funny.github.io/posts/lru/</link><pubDate>Mon, 08 Apr 2024 18:49:51 +0800</pubDate><guid>https://52funny.github.io/posts/lru/</guid><description>&lt;p>LRU 是缓存替换机制中的一个算法。由于计算机存储空间大小是 &lt;strong>固定&lt;/strong> 的，并不是无限大小的空间，无法容纳所有的数据，所以当有新的数据要被置换到 &lt;strong>缓存&lt;/strong> 时，必须采用一定的原则来取代适当的数据。此原则就是 &lt;strong>缓存淘汰算法&lt;/strong>。&lt;/p>
+&lt;h2 id="缓存淘汰算法">缓存淘汰算法&lt;/h2>
+&lt;p>传统的淘汰算法有以下算法：&lt;/p>
+&lt;ul>
+&lt;li>先进先出算法（FIFO）：最先进入的内容作为替换对象&lt;/li>
+&lt;li>最少使用算法（LFU）：最久没有访问的内容作为替换对象&lt;/li>
+&lt;li>最近最少使用算法（LRU）：最近最少使用的内容作为替换对象&lt;/li>
+&lt;li>非最近使用算法（NMRU）：在最近没有使用的内容中随机选择一个作为替换对象&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>LRU&lt;/strong>（Least recently used） 算法根据内容的历史访问次数来进行淘汰数据，其核心思想是「如果一个内容最近被访问过，那么将来被访问的几率也会很高。」&lt;/p>
+&lt;p>我们可以使用双端链表来进行模拟数据，然后根据内容数据的访问来删除一些数据。&lt;/p>
+&lt;ol>
+&lt;li>当有新的内容数据要 &lt;strong>插入&lt;/strong> 或者 &lt;strong>更新&lt;/strong> 的时候，我们将其插入到链表头部&lt;/li>
+&lt;li>当每次内容被 &lt;strong>命中&lt;/strong> 的时候，则将内容移动到链表头部&lt;/li>
+&lt;li>当 &lt;strong>链表满&lt;/strong> 的时候，将链表尾部的内容进行丢弃&lt;/li>
+&lt;/ol>
+&lt;p>&lt;a href="https://leetcode.cn/problems/lru-cache/"target="_blank" rel="noopener noreferrer">146.LRU 缓存&lt;/a>
+让我们实现一个 LRU 的模拟。我们可以使用双向链表来实现 &lt;strong>快速插入&lt;/strong> 节点到头部和 &lt;strong>快速删除&lt;/strong> 尾部节点。同时我们要要实现将链表中间的元素 &lt;strong>快速插入&lt;/strong> 到头部，所以我们要记住每一个中间节点的指针，我们可以使用 Hash 表来记住每一个节点的指针，这样我们就可以快速找到每一个指针的地址了。&lt;/p>
+&lt;p>代码实现如下：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;cstddef&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;iterator&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;unordered_map&amp;gt;&lt;/span>&lt;span style="color:#75715e">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">struct&lt;/span> &lt;span style="color:#a6e22e">Node&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">int&lt;/span> key;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">int&lt;/span> val;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Node &lt;span style="color:#f92672">*&lt;/span>prev;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Node &lt;span style="color:#f92672">*&lt;/span>next;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">public&lt;/span>&lt;span style="color:#f92672">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Node() &lt;span style="color:#f92672">:&lt;/span> key(&lt;span style="color:#ae81ff">0&lt;/span>), val(&lt;span style="color:#ae81ff">0&lt;/span>), prev(&lt;span style="color:#66d9ef">nullptr&lt;/span>), next(&lt;span style="color:#66d9ef">nullptr&lt;/span>) {}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Node(&lt;span style="color:#66d9ef">int&lt;/span> key, &lt;span style="color:#66d9ef">int&lt;/span> val) &lt;span style="color:#f92672">:&lt;/span> key(key), val(val), prev(&lt;span style="color:#66d9ef">nullptr&lt;/span>), next(&lt;span style="color:#66d9ef">nullptr&lt;/span>) {}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>};
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">LRUCache&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Node &lt;span style="color:#f92672">*&lt;/span>head;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Node &lt;span style="color:#f92672">*&lt;/span>tail;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> std&lt;span style="color:#f92672">::&lt;/span>unordered_map&lt;span style="color:#f92672">&amp;lt;&lt;/span>&lt;span style="color:#66d9ef">int&lt;/span>, Node &lt;span style="color:#f92672">*&amp;gt;&lt;/span> h;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">int&lt;/span> capacity;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">int&lt;/span> now;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">void&lt;/span> &lt;span style="color:#a6e22e">pushHead&lt;/span>(Node &lt;span style="color:#f92672">*&lt;/span>n) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Node &lt;span style="color:#f92672">*&lt;/span>next &lt;span style="color:#f92672">=&lt;/span> head&lt;span style="color:#f92672">-&amp;gt;&lt;/span>next;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> head&lt;span style="color:#f92672">-&amp;gt;&lt;/span>next &lt;span style="color:#f92672">=&lt;/span> n;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> n&lt;span style="color:#f92672">-&amp;gt;&lt;/span>prev &lt;span style="color:#f92672">=&lt;/span> head;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> n&lt;span style="color:#f92672">-&amp;gt;&lt;/span>next &lt;span style="color:#f92672">=&lt;/span> next;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> next&lt;span style="color:#f92672">-&amp;gt;&lt;/span>prev &lt;span style="color:#f92672">=&lt;/span> n;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">void&lt;/span> &lt;span style="color:#a6e22e">remove&lt;/span>(Node &lt;span style="color:#f92672">*&lt;/span>n) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Node &lt;span style="color:#f92672">*&lt;/span>prev &lt;span style="color:#f92672">=&lt;/span> n&lt;span style="color:#f92672">-&amp;gt;&lt;/span>prev;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Node &lt;span style="color:#f92672">*&lt;/span>next &lt;span style="color:#f92672">=&lt;/span> n&lt;span style="color:#f92672">-&amp;gt;&lt;/span>next;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> prev&lt;span style="color:#f92672">-&amp;gt;&lt;/span>next &lt;span style="color:#f92672">=&lt;/span> next;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> next&lt;span style="color:#f92672">-&amp;gt;&lt;/span>prev &lt;span style="color:#f92672">=&lt;/span> prev;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">public&lt;/span>&lt;span style="color:#f92672">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> LRUCache(&lt;span style="color:#66d9ef">int&lt;/span> capacity) &lt;span style="color:#f92672">:&lt;/span> capacity(capacity) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> head &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">new&lt;/span> Node();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> tail &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">new&lt;/span> Node();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> head&lt;span style="color:#f92672">-&amp;gt;&lt;/span>next &lt;span style="color:#f92672">=&lt;/span> tail;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> tail&lt;span style="color:#f92672">-&amp;gt;&lt;/span>prev &lt;span style="color:#f92672">=&lt;/span> head;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> now &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#a6e22e">get&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> key) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> (h.count(key) &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> remove(h[key]);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> pushHead(h[key]);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> h[key]&lt;span style="color:#f92672">-&amp;gt;&lt;/span>val;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">void&lt;/span> &lt;span style="color:#a6e22e">put&lt;/span>(&lt;span style="color:#66d9ef">int&lt;/span> key, &lt;span style="color:#66d9ef">int&lt;/span> val) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> (h.count(key) &lt;span style="color:#f92672">&amp;gt;&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> h[key]&lt;span style="color:#f92672">-&amp;gt;&lt;/span>val &lt;span style="color:#f92672">=&lt;/span> val;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> remove(h[key]);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> pushHead(h[key]);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> (now &lt;span style="color:#f92672">&amp;gt;=&lt;/span> capacity) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Node &lt;span style="color:#f92672">*&lt;/span>last &lt;span style="color:#f92672">=&lt;/span> tail&lt;span style="color:#f92672">-&amp;gt;&lt;/span>prev;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> remove(last);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> h.erase(last&lt;span style="color:#f92672">-&amp;gt;&lt;/span>key);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">delete&lt;/span> last;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> now&lt;span style="color:#f92672">--&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Node &lt;span style="color:#f92672">*&lt;/span>n &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">new&lt;/span> Node(key, val);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> pushHead(n);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> now&lt;span style="color:#f92672">++&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> h[key] &lt;span style="color:#f92672">=&lt;/span> n;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>};
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="参考内容">参考内容&lt;/h1>
+&lt;p>&lt;a href="https://en.wikipedia.org/wiki/Cache_replacement_policies"target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Cache_replacement_policies&lt;/a>
+&lt;/p>
+&lt;p>&lt;a href="https://zhuanlan.zhihu.com/p/34989978"target="_blank" rel="noopener noreferrer">https://zhuanlan.zhihu.com/p/34989978&lt;/a>
+&lt;/p></description></item><item><title>全排序算法</title><link>https://52funny.github.io/posts/permutation/</link><pubDate>Fri, 03 Mar 2023 22:08:28 +0800</pubDate><guid>https://52funny.github.io/posts/permutation/</guid><description>&lt;p>对于全排序算法，我们只要对每个位置进行模拟，然后看每个位置可以放什么数，将对应的数放进位置中，之后不断的递归回溯，这样就可以找到所有的全排列。&lt;/p>
 &lt;p>&lt;img src="https://52funny.github.io/img/permutation.png"
 alt/>&lt;/p>
 &lt;p>下面给出 rust 代码：&lt;/p>
@@ -1546,36 +1640,4 @@ alt/>&lt;/p></description></item><item><title>CaddyServer搭建web服务器</tit
 &lt;p>本次就用了 CaddyServer 的虚拟主机搭建了一个小的网站,CaddyServer 还有很多好玩的等着大家去探索.&lt;/p>
 &lt;p>此处贴一张网站的 Photo
 &lt;img src="https://file.52funny.top/blogpic/ece6ff007aebcd10564143755298ca37.png"
-alt="Ariang"/>&lt;/p></description></item><item><title>判断字符是否唯一</title><link>https://52funny.github.io/posts/008/</link><pubDate>Fri, 28 Feb 2020 15:28:42 +0800</pubDate><guid>https://52funny.github.io/posts/008/</guid><description>&lt;p>实现一个算法，确定一个字符串 &lt;code>s&lt;/code> 的所有字符是否全都不同。&lt;/p>
-&lt;h4 id="示例-1">示例 1&lt;/h4>
-&lt;pre tabindex="0">&lt;code>输入: s = &amp;#34;leetcode&amp;#34;
-输出: false
-&lt;/code>&lt;/pre>&lt;h4 id="示例-2">示例 2&lt;/h4>
-&lt;pre tabindex="0">&lt;code>输入: s = &amp;#34;abc&amp;#34;
-输出: true
-&lt;/code>&lt;/pre>&lt;p>首先我们可能会想到用两层循环来写但是那可能会超时，但是我们有更聪明的写法，就是声明一个数组来存这个出现了多少次，当这个出现的次数大于 1 的时候就说明不是一个正确的案例&lt;/p>
-&lt;p>下面给出 Go 代码&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">isUnique&lt;/span>(&lt;span style="color:#a6e22e">astr&lt;/span> &lt;span style="color:#66d9ef">string&lt;/span>) &lt;span style="color:#66d9ef">bool&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">chars&lt;/span> [&lt;span style="color:#ae81ff">256&lt;/span>]&lt;span style="color:#66d9ef">int&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span> &lt;span style="color:#a6e22e">_&lt;/span>, &lt;span style="color:#a6e22e">as&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#66d9ef">range&lt;/span> &lt;span style="color:#a6e22e">astr&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">chars&lt;/span>[byte(&lt;span style="color:#a6e22e">as&lt;/span>)]&lt;span style="color:#f92672">++&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">chars&lt;/span>[byte(&lt;span style="color:#a6e22e">as&lt;/span>)] &amp;gt; &lt;span style="color:#ae81ff">1&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">false&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">true&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>还有一种就是位运算利用一个 int（可以开 int64 位的变量） 假如是 mark 变量（000000000&amp;hellip;）利用每一位上的二进制来模拟字符是否出现过，如果没出现过，那么我们将&lt;code>1 &amp;lt;&amp;lt;( 字符与'a'的差值) | mark&lt;/code>赋值给 mark，来表示这个字符出现过。这样的做法会更省空间，就不用开一个数组来存字符出现的个数&lt;/p>
-&lt;p>下面给出 Go 的代码&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">isUnique&lt;/span>(&lt;span style="color:#a6e22e">astr&lt;/span> &lt;span style="color:#66d9ef">string&lt;/span>) &lt;span style="color:#66d9ef">bool&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">mark&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span> &lt;span style="color:#a6e22e">_&lt;/span>, &lt;span style="color:#a6e22e">as&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#66d9ef">range&lt;/span> &lt;span style="color:#a6e22e">astr&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span>&lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span>(&lt;span style="color:#a6e22e">as&lt;/span>&lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#e6db74">&amp;#39;a&amp;#39;&lt;/span>)&lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">mark&lt;/span> &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">mark&lt;/span> &lt;span style="color:#f92672">|=&lt;/span> &lt;span style="color:#ae81ff">1&lt;/span> &lt;span style="color:#f92672">&amp;lt;&amp;lt;&lt;/span> (&lt;span style="color:#a6e22e">as&lt;/span> &lt;span style="color:#f92672">-&lt;/span> &lt;span style="color:#e6db74">&amp;#39;a&amp;#39;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> } &lt;span style="color:#66d9ef">else&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">false&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">true&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>当然也可以用 C/C++来写，这里我就不演示了。&lt;/p></description></item></channel></rss>
+alt="Ariang"/>&lt;/p></description></item></channel></rss>
