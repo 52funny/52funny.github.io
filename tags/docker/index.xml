@@ -495,13 +495,13 @@ maven { url &amp;#39;https://api.xposed.info/&amp;#39;}
 &lt;p>在assets中新建一个文本文件名字叫做&lt;code>xposed_init&lt;/code>&lt;/p>
 &lt;p>里面填入需要xposed hook的主类，比如: &lt;code>com.funny.demo_xposed.Main&lt;/code>&lt;/p>
 &lt;p>里面简单写一个Java代码&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">public&lt;/span> &lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">HelloXp&lt;/span> &lt;span style="color:#66d9ef">implements&lt;/span> IXposedHookLoadPackage {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">private&lt;/span> &lt;span style="color:#66d9ef">final&lt;/span> String TAG &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;demo_xposed&amp;#34;&lt;/span>;
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">public&lt;/span> &lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">HelloXp&lt;/span> &lt;span style="color:#66d9ef">implements&lt;/span> IXposedHookLoadPackage &lt;span style="color:#f92672">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">private&lt;/span> &lt;span style="color:#66d9ef">final&lt;/span> String TAG &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;demo_xposed&amp;#34;&lt;/span>&lt;span style="color:#f92672">;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">@Override&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">public&lt;/span> &lt;span style="color:#66d9ef">void&lt;/span> &lt;span style="color:#a6e22e">handleLoadPackage&lt;/span>(XC_LoadPackage.&lt;span style="color:#a6e22e">LoadPackageParam&lt;/span> lpparam) &lt;span style="color:#66d9ef">throws&lt;/span> Throwable {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Log.&lt;span style="color:#a6e22e">d&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;xposed_demo&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Hook Success!&amp;#34;&lt;/span>);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">public&lt;/span> &lt;span style="color:#66d9ef">void&lt;/span> &lt;span style="color:#a6e22e">handleLoadPackage&lt;/span>&lt;span style="color:#f92672">(&lt;/span>XC_LoadPackage&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#a6e22e">LoadPackageParam&lt;/span> lpparam&lt;span style="color:#f92672">)&lt;/span> &lt;span style="color:#66d9ef">throws&lt;/span> Throwable &lt;span style="color:#f92672">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Log&lt;span style="color:#f92672">.&lt;/span>&lt;span style="color:#a6e22e">d&lt;/span>&lt;span style="color:#f92672">(&lt;/span>&lt;span style="color:#e6db74">&amp;#34;xposed_demo&amp;#34;&lt;/span>&lt;span style="color:#f92672">,&lt;/span> &lt;span style="color:#e6db74">&amp;#34;Hook Success!&amp;#34;&lt;/span>&lt;span style="color:#f92672">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">}&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>API接口</title><link>https://52funny.github.io/posts/014/</link><pubDate>Fri, 19 Jun 2020 18:56:42 +0800</pubDate><guid>https://52funny.github.io/posts/014/</guid><description>&lt;p>分享一些查常用的 API 接口信息&lt;/p>
 &lt;h3 id="bilibili-获取-ip">Bilibili 获取 ip&lt;/h3>
 &lt;p>&lt;code>GET: http://api.bilibili.com/x/web-interface/zone&lt;/code>&lt;/p>
@@ -882,7 +882,8 @@ alt="Xnip2020-03-25_14-35-53"/>&lt;/p>
 &lt;/p>
 &lt;h3 id="下载地址">下载地址&lt;/h3>
 &lt;p>&lt;a href="https://github.com/52funny/chaoxingsign/releases"target="_blank" rel="noopener noreferrer">https://github.com/52funny/chaoxingsign/releases&lt;/a>
-&lt;/p></description></item><item><title>数据库基础</title><link>https://52funny.github.io/posts/011/</link><pubDate>Wed, 25 Mar 2020 14:41:42 +0800</pubDate><guid>https://52funny.github.io/posts/011/</guid><description>&lt;h4 id="tips">tips&lt;/h4>
+&lt;/p></description></item><item><title>数据库基础</title><link>https://52funny.github.io/posts/011/</link><pubDate>Wed, 25 Mar 2020 14:41:42 +0800</pubDate><guid>https://52funny.github.io/posts/011/</guid><description>&lt;p>数据库基础，本文将讲述一下基本的 MySQL 基本语法以及遇到的一些问题。&lt;/p>
+&lt;h4 id="tips">tips&lt;/h4>
 &lt;ul>
 &lt;li>解决&lt;code>Host '192.168.1.75' is not allowed to connect to this MySQL server&lt;/code>&lt;/li>
 &lt;/ul>
