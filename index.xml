@@ -7,7 +7,7 @@
 alt/>&lt;/p>
 &lt;p>可以看出 &lt;strong>红色区域&lt;/strong> 就是我们可以盛放的雨水数目。&lt;/p>
 &lt;h2 id="解题思路">解题思路&lt;/h2>
-&lt;p>首先我们可以很快的想出一种最简单的办法就是遍历高度数组，当我们遍历到当前的柱子的时候，&lt;strong>向左&lt;/strong> 和 &lt;strong>向右&lt;/strong> 找到当前柱子分隔的左区间 &lt;code>[0, i]&lt;/code> 和右区间 &lt;code>[i, n]&lt;/code> 最大值，然后根据木桶效应，选取两者之间的 &lt;strong>最小值&lt;/strong> 减去当前柱子的高度就是当前柱子可以盛放的水的数目。&lt;/p>
+&lt;p>首先我们可以很快的想出一种最简单的办法就是遍历高度数组，当我们遍历到当前的柱子的时候，&lt;strong>向左&lt;/strong> 和 &lt;strong>向右&lt;/strong> 找到当前柱子分隔的左区间 &lt;code>[0, i]&lt;/code> 和右区间 &lt;code>[i, n)&lt;/code> 最大值，然后根据木桶效应，选取两者之间的 &lt;strong>最小值&lt;/strong> 减去当前柱子的高度就是当前柱子可以盛放的水的数目。&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">trap&lt;/span>(&lt;span style="color:#a6e22e">height&lt;/span> []&lt;span style="color:#66d9ef">int&lt;/span>) &lt;span style="color:#66d9ef">int&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">n&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> len(&lt;span style="color:#a6e22e">height&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">res&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>
@@ -24,7 +24,7 @@ alt/>&lt;/p>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">res&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>但是这个算法是 $O(n^{2})$​ 的，对于大量的数据会出现超时操作。&lt;/p>
-&lt;p>针对超时问题，我们需要改进我们的算法。我们可以进行一次遍历找到 &lt;strong>最高的柱子&lt;/strong>，然后可以看成左区间 &lt;code>[0, i)&lt;/code> 一定是 &lt;strong>递增&lt;/strong> 到最高的柱子，右区间 &lt;code>(i, n]&lt;/code> 是从最高的柱子开始 &lt;strong>递减&lt;/strong>。所以 &lt;strong>从头&lt;/strong> 开始遍历左区间可以找到 &lt;strong>目前的最大值&lt;/strong>，如果遍历到的柱子不是最大值，说明可以和左区间的目前最大的柱子形成一个凹槽来盛水。相反，对于右区间我们可以从 &lt;strong>尾部&lt;/strong> 反向遍历区间，这样就是一个递增的过程，同样可以用左区间的方式来处理。这样算法时间复杂度就是 $O(n)$。&lt;/p>
+&lt;p>针对超时问题，我们需要改进我们的算法。我们可以进行一次遍历找到 &lt;strong>最高的柱子&lt;/strong>，然后可以看成左区间 &lt;code>[0, i)&lt;/code> 一定是 &lt;strong>递增&lt;/strong> 到最高的柱子，右区间 &lt;code>(i, n)&lt;/code> 是从最高的柱子开始 &lt;strong>递减&lt;/strong>。所以 &lt;strong>从头&lt;/strong> 开始遍历左区间可以找到 &lt;strong>目前的最大值&lt;/strong>，如果遍历到的柱子不是最大值，说明可以和左区间的目前最大的柱子形成一个凹槽来盛水。相反，对于右区间我们可以从 &lt;strong>尾部&lt;/strong> 反向遍历区间，这样就是一个递增的过程，同样可以用左区间的方式来处理。这样算法时间复杂度就是 $O(n)$。&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">trap&lt;/span>(&lt;span style="color:#a6e22e">height&lt;/span> []&lt;span style="color:#66d9ef">int&lt;/span>) &lt;span style="color:#66d9ef">int&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">n&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> len(&lt;span style="color:#a6e22e">height&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">res&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>
