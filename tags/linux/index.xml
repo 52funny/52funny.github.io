@@ -1,5 +1,4 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux on 52funny Blog</title><link>https://52funny.github.io/tags/linux/</link><description>Recent content in Linux on 52funny Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Mon, 02 Mar 2020 16:04:42 +0800</lastBuildDate><atom:link href="https://52funny.github.io/tags/linux/index.xml" rel="self" type="application/rss+xml"/><item><title>接雨水</title><link>https://52funny.github.io/posts/%E6%8E%A5%E9%9B%A8%E6%B0%B4/</link><pubDate>Mon, 20 May 2024 10:04:16 +0800</pubDate><guid>https://52funny.github.io/posts/%E6%8E%A5%E9%9B%A8%E6%B0%B4/</guid><description>&lt;p>&lt;a href="https://leetcode.cn/problems/trapping-rain-water/"target="_blank" rel="noopener noreferrer">接雨水&lt;/a>
-是 Leetcode 上的一道经典的算法题目，它可以用很多种方法来解决，可以很好的考察做题者的思维方式。&lt;/p>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux on 52funny Blog</title><link>https://52funny.github.io/tags/linux/</link><description>Recent content in Linux on 52funny Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Mon, 02 Mar 2020 16:04:42 +0800</lastBuildDate><atom:link href="https://52funny.github.io/tags/linux/index.xml" rel="self" type="application/rss+xml"/><item><title>接雨水</title><link>https://52funny.github.io/posts/%E6%8E%A5%E9%9B%A8%E6%B0%B4/</link><pubDate>Mon, 20 May 2024 10:04:16 +0800</pubDate><guid>https://52funny.github.io/posts/%E6%8E%A5%E9%9B%A8%E6%B0%B4/</guid><description>&lt;p>&lt;a href="https://leetcode.cn/problems/trapping-rain-water/"target="_blank" rel="noopener noreferrer">接雨水&lt;/a> 是 Leetcode 上的一道经典的算法题目，它可以用很多种方法来解决，可以很好的考察做题者的思维方式。&lt;/p>
 &lt;h2 id="题目描述">题目描述&lt;/h2>
 &lt;p>给定 &lt;code>n&lt;/code> 个非负整数表示每个宽度为 &lt;code>1&lt;/code> 的柱子的高度图，计算按此排列的柱子，下雨之后能接多少雨水。&lt;/p>
 &lt;p>比如我们有一串柱子的高度数组 &lt;code>[2, 1, 3, 1, 0, 1, 2]&lt;/code>，我们可以画出对应的表示图。&lt;/p>
@@ -99,8 +98,7 @@ alt/>&lt;/p>
 &lt;li>当每次内容被 &lt;strong>命中&lt;/strong> 的时候，则将内容移动到链表头部&lt;/li>
 &lt;li>当 &lt;strong>链表满&lt;/strong> 的时候，将链表尾部的内容进行丢弃&lt;/li>
 &lt;/ol>
-&lt;p>&lt;a href="https://leetcode.cn/problems/lru-cache/"target="_blank" rel="noopener noreferrer">146.LRU 缓存&lt;/a>
-让我们实现一个 LRU 的模拟。我们可以使用双向链表来实现 &lt;strong>快速插入&lt;/strong> 节点到头部和 &lt;strong>快速删除&lt;/strong> 尾部节点。同时我们要要实现将链表中间的元素 &lt;strong>快速插入&lt;/strong> 到头部，所以我们要记住每一个中间节点的指针，我们可以使用 Hash 表来记住每一个节点的指针，这样我们就可以快速找到每一个指针的地址了。&lt;/p>
+&lt;p>&lt;a href="https://leetcode.cn/problems/lru-cache/"target="_blank" rel="noopener noreferrer">146.LRU 缓存&lt;/a> 让我们实现一个 LRU 的模拟。我们可以使用双向链表来实现 &lt;strong>快速插入&lt;/strong> 节点到头部和 &lt;strong>快速删除&lt;/strong> 尾部节点。同时我们要要实现将链表中间的元素 &lt;strong>快速插入&lt;/strong> 到头部，所以我们要记住每一个中间节点的指针，我们可以使用 Hash 表来记住每一个节点的指针，这样我们就可以快速找到每一个指针的地址了。&lt;/p>
 &lt;p>代码实现如下：&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-cpp" data-lang="cpp">&lt;span class="line">&lt;span class="cl">&lt;span class="cp">#include&lt;/span> &lt;span class="cpf">&amp;lt;cstddef&amp;gt;&lt;/span>&lt;span class="cp">
 &lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cp">#include&lt;/span> &lt;span class="cpf">&amp;lt;iterator&amp;gt;&lt;/span>&lt;span class="cp">
@@ -174,10 +172,8 @@ alt/>&lt;/p>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">};&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="参考内容">参考内容&lt;/h1>
-&lt;p>&lt;a href="https://en.wikipedia.org/wiki/Cache_replacement_policies"target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Cache_replacement_policies&lt;/a>
-&lt;/p>
-&lt;p>&lt;a href="https://zhuanlan.zhihu.com/p/34989978"target="_blank" rel="noopener noreferrer">https://zhuanlan.zhihu.com/p/34989978&lt;/a>
-&lt;/p></description></item><item><title>全排序算法</title><link>https://52funny.github.io/posts/permutation/</link><pubDate>Fri, 03 Mar 2023 22:08:28 +0800</pubDate><guid>https://52funny.github.io/posts/permutation/</guid><description>&lt;p>对于全排序算法，我们只要对每个位置进行模拟，然后看每个位置可以放什么数，将对应的数放进位置中，之后不断的递归回溯，这样就可以找到所有的全排列。&lt;/p>
+&lt;p>&lt;a href="https://en.wikipedia.org/wiki/Cache_replacement_policies"target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Cache_replacement_policies&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://zhuanlan.zhihu.com/p/34989978"target="_blank" rel="noopener noreferrer">https://zhuanlan.zhihu.com/p/34989978&lt;/a>&lt;/p></description></item><item><title>全排序算法</title><link>https://52funny.github.io/posts/permutation/</link><pubDate>Fri, 03 Mar 2023 22:08:28 +0800</pubDate><guid>https://52funny.github.io/posts/permutation/</guid><description>&lt;p>对于全排序算法，我们只要对每个位置进行模拟，然后看每个位置可以放什么数，将对应的数放进位置中，之后不断的递归回溯，这样就可以找到所有的全排列。&lt;/p>
 &lt;p>&lt;img src="https://52funny.github.io/img/permutation.png"
 alt/>&lt;/p>
 &lt;p>下面给出 rust 代码：&lt;/p>
@@ -235,8 +231,7 @@ alt/>&lt;/p>
 &lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
 &lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
 &lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>第一周</title><link>https://52funny.github.io/algorithm/001/</link><pubDate>Tue, 11 Oct 2022 19:55:47 +0800</pubDate><guid>https://52funny.github.io/algorithm/001/</guid><description>&lt;h3 id="1404-number-of-steps-to-reduce-a-number-in-binary-representation-to-onehttpsleetcodecnproblemsnumber-of-steps-to-reduce-a-number-in-binary-representation-to-one">&lt;a href="https://leetcode.cn/problems/number-of-steps-to-reduce-a-number-in-binary-representation-to-one/"target="_blank" rel="noopener noreferrer">1404. Number of Steps to Reduce a Number in Binary Representation to One&lt;/a>
-&lt;/h3>
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>第一周</title><link>https://52funny.github.io/algorithm/001/</link><pubDate>Tue, 11 Oct 2022 19:55:47 +0800</pubDate><guid>https://52funny.github.io/algorithm/001/</guid><description>&lt;h3 id="1404-number-of-steps-to-reduce-a-number-in-binary-representation-to-onehttpsleetcodecnproblemsnumber-of-steps-to-reduce-a-number-in-binary-representation-to-one">&lt;a href="https://leetcode.cn/problems/number-of-steps-to-reduce-a-number-in-binary-representation-to-one/"target="_blank" rel="noopener noreferrer">1404. Number of Steps to Reduce a Number in Binary Representation to One&lt;/a>&lt;/h3>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-rust" data-lang="rust">&lt;span class="line">&lt;span class="cl">&lt;span class="k">impl&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">Solution&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="w">
 &lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="k">pub&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">fn&lt;/span> &lt;span class="nf">num_steps&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">s&lt;/span>: &lt;span class="nb">String&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="w"> &lt;/span>-&amp;gt; &lt;span class="kt">i32&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="w">
 &lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="kd">let&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">s&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">&amp;amp;&lt;/span>&lt;span class="k">mut&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nb">Vec&lt;/span>::&lt;span class="n">from&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">s&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
@@ -265,8 +260,7 @@ alt/>&lt;/p>
 &lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">s&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">insert&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="sc">&amp;#39;1&amp;#39;&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">as&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kt">u8&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
 &lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
 &lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="1405-longest-happy-stringhttpsleetcodecnproblemslongest-happy-string">&lt;a href="https://leetcode.cn/problems/longest-happy-string/"target="_blank" rel="noopener noreferrer">1405. Longest Happy String&lt;/a>
-&lt;/h3>
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="1405-longest-happy-stringhttpsleetcodecnproblemslongest-happy-string">&lt;a href="https://leetcode.cn/problems/longest-happy-string/"target="_blank" rel="noopener noreferrer">1405. Longest Happy String&lt;/a>&lt;/h3>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-rust" data-lang="rust">&lt;span class="line">&lt;span class="cl">&lt;span class="k">impl&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">Solution&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="w">
 &lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="k">pub&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">fn&lt;/span> &lt;span class="nf">longest_diverse_string&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="k">mut&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">a&lt;/span>: &lt;span class="kt">i32&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">mut&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">b&lt;/span>: &lt;span class="kt">i32&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">mut&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">c&lt;/span>: &lt;span class="kt">i32&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="w"> &lt;/span>-&amp;gt; &lt;span class="nb">String&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="w">
 &lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="kd">let&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">mut&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">v&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nb">String&lt;/span>::&lt;span class="n">new&lt;/span>&lt;span class="p">();&lt;/span>&lt;span class="w">
@@ -302,8 +296,7 @@ alt/>&lt;/p>
 &lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">v&lt;/span>&lt;span class="w">
 &lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
 &lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="6-zigzag-conversionhttpsleetcodecnproblemszigzag-conversion">&lt;a href="https://leetcode.cn/problems/zigzag-conversion/"target="_blank" rel="noopener noreferrer">6. Zigzag Conversion&lt;/a>
-&lt;/h3>
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="6-zigzag-conversionhttpsleetcodecnproblemszigzag-conversion">&lt;a href="https://leetcode.cn/problems/zigzag-conversion/"target="_blank" rel="noopener noreferrer">6. Zigzag Conversion&lt;/a>&lt;/h3>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-rust" data-lang="rust">&lt;span class="line">&lt;span class="cl">&lt;span class="k">impl&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">Solution&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="w">
 &lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="k">pub&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">fn&lt;/span> &lt;span class="nf">convert&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">s&lt;/span>: &lt;span class="nb">String&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">num_rows&lt;/span>: &lt;span class="kt">i32&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="w"> &lt;/span>-&amp;gt; &lt;span class="nb">String&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="w">
 &lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="k">if&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">num_rows&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">==&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">||&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">s&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">len&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">num_rows&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">as&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kt">usize&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="w">
@@ -362,8 +355,7 @@ alt/>&lt;/p>
 &lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">s&lt;/span>&lt;span class="w">
 &lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
 &lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="面试题-0303-stack-of-plates-lccihttpsleetcodecnproblemsstack-of-plates-lcci">&lt;a href="https://leetcode.cn/problems/stack-of-plates-lcci/"target="_blank" rel="noopener noreferrer">面试题 03.03. Stack of Plates LCCI&lt;/a>
-&lt;/h3>
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="面试题-0303-stack-of-plates-lccihttpsleetcodecnproblemsstack-of-plates-lcci">&lt;a href="https://leetcode.cn/problems/stack-of-plates-lcci/"target="_blank" rel="noopener noreferrer">面试题 03.03. Stack of Plates LCCI&lt;/a>&lt;/h3>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-rust" data-lang="rust">&lt;span class="line">&lt;span class="cl">&lt;span class="cp">#[derive(Debug)]&lt;/span>&lt;span class="w">
 &lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">pub&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">struct&lt;/span> &lt;span class="nc">StackOfPlates&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="w">
 &lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">data&lt;/span>: &lt;span class="nb">Vec&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="nb">Vec&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="kt">i32&lt;/span>&lt;span class="o">&amp;gt;&amp;gt;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w">
@@ -418,8 +410,7 @@ alt/>&lt;/p>
 &lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="w">
 &lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
 &lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="24-swap-nodes-in-pairshttpsleetcodecnproblemsswap-nodes-in-pairs">&lt;a href="https://leetcode.cn/problems/swap-nodes-in-pairs/"target="_blank" rel="noopener noreferrer">24. Swap Nodes in Pairs&lt;/a>
-&lt;/h3>
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="24-swap-nodes-in-pairshttpsleetcodecnproblemsswap-nodes-in-pairs">&lt;a href="https://leetcode.cn/problems/swap-nodes-in-pairs/"target="_blank" rel="noopener noreferrer">24. Swap Nodes in Pairs&lt;/a>&lt;/h3>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-rust" data-lang="rust">&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// Definition for singly-linked list.
 &lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// #[derive(PartialEq, Eq, Clone, Debug)]
 &lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// pub struct ListNode {
@@ -456,8 +447,7 @@ alt/>&lt;/p>
 &lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">result&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">next&lt;/span>&lt;span class="w">
 &lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
 &lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="1685-sum-of-absolute-differences-in-a-sorted-arrayhttpsleetcodecnproblemssum-of-absolute-differences-in-a-sorted-array">&lt;a href="https://leetcode.cn/problems/sum-of-absolute-differences-in-a-sorted-array/"target="_blank" rel="noopener noreferrer">1685. Sum of Absolute Differences in a Sorted Array&lt;/a>
-&lt;/h3>
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="1685-sum-of-absolute-differences-in-a-sorted-arrayhttpsleetcodecnproblemssum-of-absolute-differences-in-a-sorted-array">&lt;a href="https://leetcode.cn/problems/sum-of-absolute-differences-in-a-sorted-array/"target="_blank" rel="noopener noreferrer">1685. Sum of Absolute Differences in a Sorted Array&lt;/a>&lt;/h3>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-rust" data-lang="rust">&lt;span class="line">&lt;span class="cl">&lt;span class="k">impl&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">Solution&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="w">
 &lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="k">pub&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">fn&lt;/span> &lt;span class="nf">get_sum_absolute_differences&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">nums&lt;/span>: &lt;span class="nb">Vec&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="kt">i32&lt;/span>&lt;span class="o">&amp;gt;&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="w"> &lt;/span>-&amp;gt; &lt;span class="nb">Vec&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="kt">i32&lt;/span>&lt;span class="o">&amp;gt;&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="w">
 &lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="kd">let&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">mut&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">prefix_array&lt;/span>: &lt;span class="nb">Vec&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="kt">i32&lt;/span>&lt;span class="o">&amp;gt;&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nb">Vec&lt;/span>::&lt;span class="n">with_capacity&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">nums&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">len&lt;/span>&lt;span class="p">());&lt;/span>&lt;span class="w">
@@ -474,8 +464,7 @@ alt/>&lt;/p>
 &lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="n">result&lt;/span>&lt;span class="w">
 &lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
 &lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="面试题-0105-one-away-lccihttpsleetcodecnproblemsone-away-lcci">&lt;a href="https://leetcode.cn/problems/one-away-lcci/"target="_blank" rel="noopener noreferrer">面试题 01.05. One Away LCCI&lt;/a>
-&lt;/h3>
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="面试题-0105-one-away-lccihttpsleetcodecnproblemsone-away-lcci">&lt;a href="https://leetcode.cn/problems/one-away-lcci/"target="_blank" rel="noopener noreferrer">面试题 01.05. One Away LCCI&lt;/a>&lt;/h3>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-rust" data-lang="rust">&lt;span class="line">&lt;span class="cl">&lt;span class="k">impl&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">Solution&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="w">
 &lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="k">pub&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">fn&lt;/span> &lt;span class="nf">one_edit_away&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">first&lt;/span>: &lt;span class="nb">String&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">second&lt;/span>: &lt;span class="nb">String&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="w"> &lt;/span>-&amp;gt; &lt;span class="kt">bool&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="w">
 &lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="kd">let&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">max_str&lt;/span>: &lt;span class="kp">&amp;amp;&lt;/span>&lt;span class="nb">String&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w">
@@ -901,14 +890,11 @@ alt="Xnip2020-04-13_19-25-18"/>&lt;/p>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>最后就可以用 CookIe 进行其他的操作了.&lt;/p>
 &lt;blockquote>
-&lt;p>&lt;a href="http://211.86.128.194:80/suzxyjw/custom/js/jkingo.des.js"target="_blank" rel="noopener noreferrer">jkingo.des.js&lt;/a>
-&lt;/p>
-&lt;p>&lt;a href="https://github.com/52funny/KINGOSOFT-LOGIN"target="_blank" rel="noopener noreferrer">演示代码(仅供参考)&lt;/a>
-&lt;/p>
+&lt;p>&lt;a href="http://211.86.128.194:80/suzxyjw/custom/js/jkingo.des.js"target="_blank" rel="noopener noreferrer">jkingo.des.js&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://github.com/52funny/KINGOSOFT-LOGIN"target="_blank" rel="noopener noreferrer">演示代码(仅供参考)&lt;/a>&lt;/p>
 &lt;/blockquote></description></item><item><title>超星学习通签到</title><link>https://52funny.github.io/posts/012/</link><pubDate>Wed, 25 Mar 2020 14:43:42 +0800</pubDate><guid>https://52funny.github.io/posts/012/</guid><description>&lt;h3 id="超星学习通签到工具">超星学习通签到工具&lt;/h3>
 &lt;blockquote>
-&lt;p>这是我参考一个大佬的&lt;a href="https://github.com/yuban10703/chaoxingsign"target="_blank" rel="noopener noreferrer">python 脚本&lt;/a>
-写的 go 语言版本
+&lt;p>这是我参考一个大佬的&lt;a href="https://github.com/yuban10703/chaoxingsign"target="_blank" rel="noopener noreferrer">python 脚本&lt;/a>写的 go 语言版本
 首先感谢大佬&lt;/p>
 &lt;/blockquote>
 &lt;h3 id="configjson-使用说明">config.json 使用说明&lt;/h3>
@@ -963,11 +949,9 @@ alt="Xnip2020-04-13_19-25-18"/>&lt;/p>
 &lt;p>&lt;img src="https://file.52funny.top/blogpic/1488860bacb8c9de1d3e329c2c669de8.jpg"
 alt="Xnip2020-03-25_14-35-53"/>&lt;/p>
 &lt;h3 id="tips">Tips&lt;/h3>
-&lt;p>&lt;a href="http://sc.ftqq.com/3.version"target="_blank" rel="noopener noreferrer">server 酱使用方法&lt;/a>
-&lt;/p>
+&lt;p>&lt;a href="http://sc.ftqq.com/3.version"target="_blank" rel="noopener noreferrer">server 酱使用方法&lt;/a>&lt;/p>
 &lt;h3 id="下载地址">下载地址&lt;/h3>
-&lt;p>&lt;a href="https://github.com/52funny/chaoxingsign/releases"target="_blank" rel="noopener noreferrer">https://github.com/52funny/chaoxingsign/releases&lt;/a>
-&lt;/p></description></item><item><title>数据库基础</title><link>https://52funny.github.io/posts/011/</link><pubDate>Wed, 25 Mar 2020 14:41:42 +0800</pubDate><guid>https://52funny.github.io/posts/011/</guid><description>&lt;p>数据库基础，本文将讲述一下基本的 MySQL 基本语法以及遇到的一些问题。&lt;/p>
+&lt;p>&lt;a href="https://github.com/52funny/chaoxingsign/releases"target="_blank" rel="noopener noreferrer">https://github.com/52funny/chaoxingsign/releases&lt;/a>&lt;/p></description></item><item><title>数据库基础</title><link>https://52funny.github.io/posts/011/</link><pubDate>Wed, 25 Mar 2020 14:41:42 +0800</pubDate><guid>https://52funny.github.io/posts/011/</guid><description>&lt;p>数据库基础，本文将讲述一下基本的 MySQL 基本语法以及遇到的一些问题。&lt;/p>
 &lt;h4 id="tips">tips&lt;/h4>
 &lt;ul>
 &lt;li>解决&lt;code>Host '192.168.1.75' is not allowed to connect to this MySQL server&lt;/code>&lt;/li>
@@ -1595,8 +1579,7 @@ alt="Xnip2020-03-25_14-35-53"/>&lt;/p>
 &lt;li>&lt;code>create or replace view view_stu as select sno, sname from stu;&lt;/code>&lt;/li>
 &lt;li>&lt;code>alter view view_stu as select sno, sname from stu;&lt;/code>&lt;/li>
 &lt;/ul></description></item><item><title>利用Caddy方向代理Rocket.Chat</title><link>https://52funny.github.io/posts/010/</link><pubDate>Mon, 02 Mar 2020 16:04:42 +0800</pubDate><guid>https://52funny.github.io/posts/010/</guid><description>&lt;blockquote>
-&lt;p>&lt;a href="https://rocket.chat/docs/"target="_blank" rel="noopener noreferrer">Rocket.Chat docs&lt;/a>
-&lt;/p>
+&lt;p>&lt;a href="https://rocket.chat/docs/"target="_blank" rel="noopener noreferrer">Rocket.Chat docs&lt;/a>&lt;/p>
 &lt;/blockquote>
 &lt;p>这次使用这个 Rocket.Chat 是为了填补上次的 Caddy 的坑,上次的 Caddy 并没有展现 Caddy 的魅力,这次我用 Caddy 的反向代理来部署 Rocket.Chat 这个服务.&lt;/p>
 &lt;p>Rocket.Chat 是一种类似 Slack 的开源聊天软件.&lt;/p>
@@ -1630,8 +1613,7 @@ alt="Xnip2020-03-25_14-35-53"/>&lt;/p>
 &lt;p>然后在浏览器里输入你的&lt;code>ip:3000&lt;/code>就可以访问你的 Rocket.Chat&lt;/p>
 &lt;br>
 &lt;h3 id="使用-caddy-反向代理">使用 Caddy 反向代理&lt;/h3>
-&lt;p>安装 Caddy 可以参考之前的文档&lt;a href="https://www.52funny.top/archives/caddyserver%E6%90%AD%E5%BB%BAweb%E6%9C%8D%E5%8A%A1%E5%99%A8"target="_blank" rel="noopener noreferrer">CaddyServer 搭建 web 服务器&lt;/a>
-&lt;/p>
+&lt;p>安装 Caddy 可以参考之前的文档&lt;a href="https://www.52funny.top/archives/caddyserver%E6%90%AD%E5%BB%BAweb%E6%9C%8D%E5%8A%A1%E5%99%A8"target="_blank" rel="noopener noreferrer">CaddyServer 搭建 web 服务器&lt;/a>&lt;/p>
 &lt;p>编辑 Caddyfile 文件&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">sudo vim /etc/caddy/Caddyfile
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>输入以下内容&lt;/p>
