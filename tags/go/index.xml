@@ -22,7 +22,7 @@ alt/>&lt;/p>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="nx">res&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>但是这个算法是 $O(n^{2})$​ 的，对于大量的数据会出现超时操作。&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>但是这个算法是 $$O(n^{2})$$​ 的，对于大量的数据会出现超时操作。&lt;/p>
 &lt;p>针对超时问题，我们需要改进我们的算法。我们可以进行一次遍历找到 &lt;strong>最高的柱子&lt;/strong>，然后可以看成左区间 &lt;code>[0, i)&lt;/code> 一定是 &lt;strong>递增&lt;/strong> 到最高的柱子，右区间 &lt;code>(i, n)&lt;/code> 是从最高的柱子开始 &lt;strong>递减&lt;/strong>。所以 &lt;strong>从头&lt;/strong> 开始遍历左区间可以找到 &lt;strong>目前的最大值&lt;/strong>，如果遍历到的柱子不是最大值，说明可以和左区间的目前最大的柱子形成一个凹槽来盛水。相反，对于右区间我们可以从 &lt;strong>尾部&lt;/strong> 反向遍历区间，这样就是一个递增的过程，同样可以用左区间的方式来处理。这样算法时间复杂度就是 $O(n)$。&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-go" data-lang="go">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">func&lt;/span> &lt;span class="nf">trap&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">height&lt;/span> &lt;span class="p">[]&lt;/span>&lt;span class="kt">int&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="kt">int&lt;/span> &lt;span class="p">{&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">n&lt;/span> &lt;span class="o">:=&lt;/span> &lt;span class="nb">len&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">height&lt;/span>&lt;span class="p">)&lt;/span>
