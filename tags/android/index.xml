@@ -18,8 +18,8 @@ fmt.Println(trap(heights))
 }
 &lt;/span>
 &lt;div>
-&lt;pre style="outline: none;" spellcheck="false"
-id="id-f40036c1c186797ef2fdebbb1467b4bdee8de639">&lt;code data-lang="go">func trap(height []int) int {
+&lt;pre style="outline: none" spellcheck="false"
+id="id-f40036c1c186797ef2fdebbb1467b4bdee8de639">&lt;code class="language-go" data-lang="go">func trap(height []int) int {
 n := len(height)
 res := 0
 for i, v := range height {
@@ -40,8 +40,8 @@ output-mode="" template="#main.go">&lt;/codapi-snippet>
 &lt;p>但是这个算法是 $$O(n^{2})$$​ 的，对于大量的数据会出现超时操作。&lt;/p>
 &lt;p>针对超时问题，我们需要改进我们的算法。我们可以进行一次遍历找到 &lt;strong>最高的柱子&lt;/strong>，然后可以看成左区间 &lt;code>[0, i)&lt;/code> 一定是 &lt;strong>递增&lt;/strong> 到最高的柱子，右区间 &lt;code>(i, n)&lt;/code> 是从最高的柱子开始 &lt;strong>递减&lt;/strong>。所以 &lt;strong>从头&lt;/strong> 开始遍历左区间可以找到 &lt;strong>目前的最大值&lt;/strong>，如果遍历到的柱子不是最大值，说明可以和左区间的目前最大的柱子形成一个凹槽来盛水。相反，对于右区间我们可以从 &lt;strong>尾部&lt;/strong> 反向遍历区间，这样就是一个递增的过程，同样可以用左区间的方式来处理。这样算法时间复杂度就是 $O(n)$。&lt;/p>
 &lt;div>
-&lt;pre style="outline: none;" spellcheck="false"
-id="id-12125083f4e56d87fd12afdbba21501eae6efc2c">&lt;code data-lang="go">func trap(height []int) int {
+&lt;pre style="outline: none" spellcheck="false"
+id="id-12125083f4e56d87fd12afdbba21501eae6efc2c">&lt;code class="language-go" data-lang="go">func trap(height []int) int {
 n := len(height)
 res := 0
 peak, peakIndex := 0, 0
@@ -87,8 +87,8 @@ alt/>&lt;/p>
 &lt;/li>
 &lt;/ul>
 &lt;div>
-&lt;pre style="outline: none;" spellcheck="false"
-id="id-88dcc3ecb684d5070d71da8cabe54b26f5ecedb5">&lt;code data-lang="go">func trap(height []int) int {
+&lt;pre style="outline: none" spellcheck="false"
+id="id-88dcc3ecb684d5070d71da8cabe54b26f5ecedb5">&lt;code class="language-go" data-lang="go">func trap(height []int) int {
 st := make([]int, 0)
 res := 0
 for i := 0; i &amp;lt; len(height); i&amp;#43;&amp;#43; {
