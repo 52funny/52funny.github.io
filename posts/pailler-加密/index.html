@@ -53,53 +53,67 @@
 </span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>pow_mod</span><span class=p>(</span><span class=n>g</span><span class=p>,</span> <span class=n>m</span><span class=p>,</span> <span class=n>n2</span><span class=p>)</span> <span class=o>*</span> <span class=n>pow_mod</span><span class=p>(</span><span class=n>r</span><span class=p>,</span> <span class=n>pk</span><span class=o>.</span><span class=n>n</span><span class=p>,</span> <span class=n>n2</span><span class=p>)</span> <span class=o>%</span> <span class=n>n2</span>
 </span></span></code></pre></div><h2 id=解密>解密</h2><p>解密主要有以下过程：</p><ol><li>密文 $$c$$ 是要被进行解密的内容</li><li>计算明文消息 $$m$$ 通过式子 $$m = L(c^{\lambda} \bmod n^{2}) \cdot \mu \bmod n$$</li></ol><div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=k>def</span> <span class=nf>decrypt</span><span class=p>(</span><span class=n>c</span><span class=p>:</span> <span class=nb>int</span><span class=p>,</span> <span class=n>sk</span><span class=p>:</span> <span class=n>SK</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=nb>int</span><span class=p>:</span>
 </span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>L</span><span class=p>(</span><span class=n>pow_mod</span><span class=p>(</span><span class=n>c</span><span class=p>,</span> <span class=n>sk</span><span class=o>.</span><span class=n>lambd</span><span class=p>,</span> <span class=n>n2</span><span class=p>),</span> <span class=n>n</span><span class=p>)</span> <span class=o>*</span> <span class=n>mu</span> <span class=o>%</span> <span class=n>n</span>
-</span></span></code></pre></div><h2 id=encrypt--decrypt-demo>Encrypt & Decrypt Demo</h2><p>下面给出 <strong>加密</strong> 和 <strong>解密</strong> 的代码：</p><span id=main.py style=display:none>import libnum
+</span></span></code></pre></div><h2 id=encrypt--decrypt-demo>Encrypt & Decrypt Demo</h2><p>下面给出 <strong>加密</strong> 和 <strong>解密</strong> 的代码：</p><pre id=main.py style=display:none>
+  import libnum
 import random
 from collections import namedtuple
+
 # L(x) fucntion
-def L(x: int, n: int) -> int:
-return (x - 1) // n
+def L(x: int, n: int) -&gt; int:
+    return (x - 1) // n
+
 # generate random number r
 # ensure lcd(r, n-1) = 1
-def random_number(n: int) -> int:
-while True:
-g = random.randint(1, n - 1)
-if libnum.gcd(n, g) == 1:
-return g
-else:
-print(g, n)
+def random_number(n: int) -&gt; int:
+    while True:
+        g = random.randint(1, n - 1)
+        if libnum.gcd(n, g) == 1:
+            return g
+        else:
+            print(g, n)
+
 # quickly power mod
-def pow_mod(a: int, b: int, p: int) -> int:
-r = 1
-while b:
-r = r * a % p if b & 1 else r
-a = a * a % p
-b >>= 1
-return r
+def pow_mod(a: int, b: int, p: int) -&gt; int:
+    r = 1
+    while b:
+        r = r * a % p if b &amp; 1 else r
+        a = a * a % p
+        b &gt;&gt;= 1
+    return r
+
 # generate 256 bits prime number
 p = libnum.generate_prime(256)
 q = libnum.generate_prime(256)
 n = p * q
 n2 = n ** 2
+
 phi_n = (p - 1) * (q - 1)
 lambd = libnum.lcm(p - 1, q - 1)
+
 # random number
 g = random_number(n2)
 # mu
 mu = pow_mod(L(pow_mod(g, lambd, n2), n), phi_n - 1, n)
-PK = namedtuple("PK", ["n", "g"])
-SK = namedtuple("SK", ["lambd", "mu"])
+
+PK = namedtuple(&#34;PK&#34;, [&#34;n&#34;, &#34;g&#34;])
+SK = namedtuple(&#34;SK&#34;, [&#34;lambd&#34;, &#34;mu&#34;])
+
 # public key
 pk = PK(n, g)
 # secret key
 sk = SK(lambd, mu)
-def encrypt(m: int, pk: PK) -> int:
-# return cipher text c = (g ** m) * (r ** n) mod (n ** 2)
-r = random_number(n)
-return pow_mod(g, m, n2) * pow_mod(r, pk.n, n2) % n2
-def decrypt(c: int, sk: SK) -> int:
-return L(pow_mod(c, sk.lambd, n2), n) * mu % n
-##CODE##</span><div><pre style=outline:none;-webkit-user-modify:read-write-plaintext-only spellcheck=false id=id-80ec890a6a8f62b447525251e34d4acefdcfb04d><code class=language-python data-lang=python>m = 520
+
+
+def encrypt(m: int, pk: PK) -&gt; int:
+    # return cipher text c = (g ** m)  * (r ** n) mod (n ** 2)
+    r = random_number(n)
+    return pow_mod(g, m, n2) * pow_mod(r, pk.n, n2) % n2
+
+def decrypt(c: int, sk: SK) -&gt; int:
+    return L(pow_mod(c, sk.lambd, n2), n) * mu % n
+
+##CODE##
+</pre><div><pre style=outline:none;-webkit-user-modify:read-write-plaintext-only spellcheck=false id=id-80ec890a6a8f62b447525251e34d4acefdcfb04d><code class=language-python data-lang=python>m = 520
 c = encrypt(m, pk)
 plain = decrypt(c, sk)
 print(&#34;pk:&#34;, pk)
