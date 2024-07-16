@@ -1,4 +1,263 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>算法 on 52funny Blog</title><link>https://52funny.github.io/tags/%E7%AE%97%E6%B3%95/</link><description>Recent content in 算法 on 52funny Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Mon, 20 May 2024 10:04:16 +0800</lastBuildDate><atom:link href="https://52funny.github.io/tags/%E7%AE%97%E6%B3%95/index.xml" rel="self" type="application/rss+xml"/><item><title>接雨水</title><link>https://52funny.github.io/posts/%E6%8E%A5%E9%9B%A8%E6%B0%B4/</link><pubDate>Mon, 20 May 2024 10:04:16 +0800</pubDate><guid>https://52funny.github.io/posts/%E6%8E%A5%E9%9B%A8%E6%B0%B4/</guid><description>&lt;p>&lt;a href="https://leetcode.cn/problems/trapping-rain-water/"target="_blank" rel="noopener noreferrer">接雨水&lt;/a> 是 Leetcode 上的一道经典的算法题目，它可以用很多种方法来解决，可以很好的考察做题者的思维方式。&lt;/p>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>算法 on 52funny Blog</title><link>https://52funny.github.io/tags/%E7%AE%97%E6%B3%95/</link><description>Recent content in 算法 on 52funny Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Mon, 20 May 2024 10:04:16 +0800</lastBuildDate><atom:link href="https://52funny.github.io/tags/%E7%AE%97%E6%B3%95/index.xml" rel="self" type="application/rss+xml"/><item><title>Pailler 加密方案</title><link>https://52funny.github.io/posts/pailler-%E5%8A%A0%E5%AF%86/</link><pubDate>Tue, 09 Jul 2024 16:24:16 +0800</pubDate><guid>https://52funny.github.io/posts/pailler-%E5%8A%A0%E5%AF%86/</guid><description>&lt;p>Pailler 加密是 &lt;a href="https://scholar.google.com/citations?user=xwzhjfoAAAAJ&amp;amp;hl=en"target="_blank" rel="noopener noreferrer">Pascal Paillier&lt;/a> 在 1999 年发表的论文「Public-Key Cryptosystems Based on Composite Degree Residuosity Classes」中提出的公钥密码学。&lt;/p>
+&lt;h2 id="算法描述">算法描述&lt;/h2>
+&lt;p>Pailler 加密主要分为分为三个步骤：&lt;/p>
+&lt;ul>
+&lt;li>密钥生成（Key Generation）&lt;/li>
+&lt;li>加密（Encryption）&lt;/li>
+&lt;li>解密（Decryption）&lt;/li>
+&lt;/ul>
+&lt;p>密钥生成过程主要生成 Pailler 加密的 &lt;strong>公钥&lt;/strong> 和 &lt;strong>私钥&lt;/strong>，用于后期的加密和解密过程。加密阶段使用公钥对明文$$m$$进行加密获得密文$$c$$。解密阶段使用私钥对密文$$c$$进行解密获得明文$$m$$。同时 Pailler 加密并且满足同态密码性质：给定密文$$c_1$$和$$c_2$$，对密文进行计算可以获得在明文$$m_1$$和$$m_2$$上的操作。&lt;/p>
+&lt;h2 id="密钥生成">密钥生成&lt;/h2>
+&lt;p>密钥生成过程主要有以下几步操作：&lt;/p>
+&lt;ol>
+&lt;li>随机选择两个 &lt;strong>长度相等&lt;/strong> 的随机素数$$p$$和$$q$$&lt;/li>
+&lt;li>计算$$n = p * q$$，并且计算$$\lambda = lcm(p-1, q-1)$$&lt;/li>
+&lt;li>选择一个随机数$$g \stackrel{\rm \$}{\leftarrow} \mathbb{Z}_{n^2}^*$$&lt;/li>
+&lt;li>然后计算一个$$\mu = (L(g ^ {\lambda} \bmod n ^ {2})) ^ {-1} \bmod n$$&lt;/li>
+&lt;/ol>
+&lt;p>其中$$L(x) = \lfloor \frac{x-1}{n} \rfloor$$, 并且结果是一个整数。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span> &lt;span class="nn">libnum&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span> &lt;span class="nn">random&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">collections&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="n">namedtuple&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># L(x) fucntion&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">L&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">x&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">int&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">n&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">int&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">-&amp;gt;&lt;/span> &lt;span class="nb">int&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">x&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">//&lt;/span> &lt;span class="n">n&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># generate random number r&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># ensure lcd(r, n-1) = 1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">random_number&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">n&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">int&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">-&amp;gt;&lt;/span> &lt;span class="nb">int&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">while&lt;/span> &lt;span class="kc">True&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">g&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">random&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">randint&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">n&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="n">libnum&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">gcd&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">n&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">g&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">g&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">else&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">g&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">n&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># quickly power mod&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">pow_mod&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">a&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">int&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">b&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">int&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">p&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">int&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">-&amp;gt;&lt;/span> &lt;span class="nb">int&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">r&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">while&lt;/span> &lt;span class="n">b&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">r&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">r&lt;/span> &lt;span class="o">*&lt;/span> &lt;span class="n">a&lt;/span> &lt;span class="o">%&lt;/span> &lt;span class="n">p&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="n">b&lt;/span> &lt;span class="o">&amp;amp;&lt;/span> &lt;span class="mi">1&lt;/span> &lt;span class="k">else&lt;/span> &lt;span class="n">r&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">a&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">a&lt;/span> &lt;span class="o">*&lt;/span> &lt;span class="n">a&lt;/span> &lt;span class="o">%&lt;/span> &lt;span class="n">p&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">b&lt;/span> &lt;span class="o">&amp;gt;&amp;gt;=&lt;/span> &lt;span class="mi">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">r&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># generate 256 bits prime number&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">p&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">libnum&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">generate_prime&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">256&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">q&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">libnum&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">generate_prime&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">256&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">n&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">p&lt;/span> &lt;span class="o">*&lt;/span> &lt;span class="n">q&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">n2&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">n&lt;/span> &lt;span class="o">**&lt;/span> &lt;span class="mi">2&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">phi_n&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">p&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">*&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">q&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">lambd&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">libnum&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">lcm&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">p&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">q&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># random number&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">g&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">random_number&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">n2&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># mu&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">mu&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">pow_mod&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">L&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">pow_mod&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">g&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">lambd&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">n2&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="n">n&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="n">phi_n&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">n&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">PK&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">namedtuple&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;PK&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="s2">&amp;#34;n&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;g&amp;#34;&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">SK&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">namedtuple&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;SK&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="s2">&amp;#34;lambd&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;mu&amp;#34;&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># public key&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">pk&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">PK&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">n&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">g&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># secret key&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">sk&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">SK&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">lambd&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">mu&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="加密">加密&lt;/h2>
+&lt;p>加密过程主要有以下过程：&lt;/p>
+&lt;ol>
+&lt;li>首先待加密的消息 $$m$$ 满足 $$0 &amp;lt;= m &amp;lt; n$$&lt;/li>
+&lt;li>随机选择一个整数 $$r \stackrel{\$}{\leftarrow} \mathbb{Z}_{n}^{*}$$&lt;/li>
+&lt;li>计算一个一个密文 $$c = g^{m} \cdot r^{n} \bmod n^{2}$$&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">encrypt&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">m&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">int&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">pk&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">PK&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">-&amp;gt;&lt;/span> &lt;span class="nb">int&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># return cipher text c = (g ** m) * (r ** n) mod (n ** 2)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">r&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">random_number&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">n&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">pow_mod&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">g&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">m&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">n2&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">*&lt;/span> &lt;span class="n">pow_mod&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">r&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">pk&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">n&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">n2&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">%&lt;/span> &lt;span class="n">n2&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="解密">解密&lt;/h2>
+&lt;p>解密主要有以下过程：&lt;/p>
+&lt;ol>
+&lt;li>密文 $$c$$ 是要被进行解密的内容&lt;/li>
+&lt;li>计算明文消息 $$m$$ 通过式子 $$m = L(c^{\lambda} \bmod n^{2}) \cdot \mu \bmod n$$&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">decrypt&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">c&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">int&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">sk&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">SK&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">-&amp;gt;&lt;/span> &lt;span class="nb">int&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">L&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">pow_mod&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">c&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">sk&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">lambd&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">n2&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="n">n&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">*&lt;/span> &lt;span class="n">mu&lt;/span> &lt;span class="o">%&lt;/span> &lt;span class="n">n&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="encrypt--decrypt-demo">Encrypt &amp;amp; Decrypt Demo&lt;/h2>
+&lt;p>下面给出 &lt;strong>加密&lt;/strong> 和 &lt;strong>解密&lt;/strong> 的代码：&lt;/p>
+&lt;span id="main.py" style="display: none;">
+import libnum
+import random
+from collections import namedtuple
+# L(x) fucntion
+def L(x: int, n: int) -&amp;gt; int:
+return (x - 1) // n
+# generate random number r
+# ensure lcd(r, n-1) = 1
+def random_number(n: int) -&amp;gt; int:
+while True:
+g = random.randint(1, n - 1)
+if libnum.gcd(n, g) == 1:
+return g
+else:
+print(g, n)
+# quickly power mod
+def pow_mod(a: int, b: int, p: int) -&amp;gt; int:
+r = 1
+while b:
+r = r * a % p if b &amp;amp; 1 else r
+a = a * a % p
+b &amp;gt;&amp;gt;= 1
+return r
+# generate 256 bits prime number
+p = libnum.generate_prime(256)
+q = libnum.generate_prime(256)
+n = p * q
+n2 = n ** 2
+phi_n = (p - 1) * (q - 1)
+lambd = libnum.lcm(p - 1, q - 1)
+# random number
+g = random_number(n2)
+# mu
+mu = pow_mod(L(pow_mod(g, lambd, n2), n), phi_n - 1, n)
+PK = namedtuple(&amp;#34;PK&amp;#34;, [&amp;#34;n&amp;#34;, &amp;#34;g&amp;#34;])
+SK = namedtuple(&amp;#34;SK&amp;#34;, [&amp;#34;lambd&amp;#34;, &amp;#34;mu&amp;#34;])
+# public key
+pk = PK(n, g)
+# secret key
+sk = SK(lambd, mu)
+def encrypt(m: int, pk: PK) -&amp;gt; int:
+# return cipher text c = (g ** m) * (r ** n) mod (n ** 2)
+r = random_number(n)
+return pow_mod(g, m, n2) * pow_mod(r, pk.n, n2) % n2
+def decrypt(c: int, sk: SK) -&amp;gt; int:
+return L(pow_mod(c, sk.lambd, n2), n) * mu % n
+##CODE##
+&lt;/span>
+&lt;div>
+&lt;pre style="outline: none; -webkit-user-modify: read-write-plaintext-only;" spellcheck="false"
+id="id-80ec890a6a8f62b447525251e34d4acefdcfb04d">&lt;code class="language-python" data-lang="python">m = 520
+c = encrypt(m, pk)
+plain = decrypt(c, sk)
+print(&amp;#34;pk:&amp;#34;, pk)
+print(&amp;#34;sk:&amp;#34;, sk)
+print(&amp;#34;m: &amp;#34;, m)
+print(&amp;#34;c: &amp;#34;, c)
+print(&amp;#34;m*:&amp;#34;, plain)&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;codapi-snippet sandbox="python" editor="basic" selector="#id-80ec890a6a8f62b447525251e34d4acefdcfb04d"
+output-mode="" template="#main.py">&lt;/codapi-snippet>
+&lt;h2 id="同态性质">同态性质&lt;/h2>
+&lt;p>Pailler 密码可以满足同态密码学的性质。通常所说的 &lt;strong>同态加法&lt;/strong> 和 &lt;strong>同态乘法&lt;/strong> 是对应 &lt;strong>明文&lt;/strong> 上的操作，并不要求在密文上也需要满足加法和乘法的性质。如下式所示，当满足同态加法或同态乘法的时候，是对应运算 $$\bullet$$ 的操作，而并不是运算 $$\circ$$ 也要满足加法或乘法操作。&lt;/p>
+&lt;p>$$D(E(m_1) \circ E(m_2)) = m_1 \bullet m_2 $$&lt;/p>
+&lt;p>Pialler 满足同态加法，也就是对密文操作的时候相对于对明文做加法操作。&lt;/p>
+&lt;p>$$D(E(m_1, r_1) \cdot E(m_2, r_2) \bmod n^{2}) = (m_1 + m_2) \bmod n $$&lt;/p>
+&lt;div>
+&lt;pre style="outline: none; -webkit-user-modify: read-write-plaintext-only;" spellcheck="false"
+id="id-911a3b5155848875ffb836b9ce1c7b533f5c61a1">&lt;code class="language-python" data-lang="python">m1 = 520
+m2 = 1314
+c1 = encrypt(m1, pk)
+c2 = encrypt(m2, pk)
+c = c1 * c2 % n2
+m = decrypt(c, sk)
+print(&amp;#34;m1: &amp;#34;, m1)
+print(&amp;#34;m2: &amp;#34;, m2)
+print(&amp;#34;m : &amp;#34;, m)
+assert m == m1 &amp;#43; m2&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;codapi-snippet sandbox="python" editor="basic" selector="#id-911a3b5155848875ffb836b9ce1c7b533f5c61a1"
+output-mode="" template="#main.py">&lt;/codapi-snippet>
+&lt;p>同时 Pailler 加密满足 &lt;strong>同态乘法&lt;/strong>。&lt;/p>
+&lt;p>$$D(E(m_1, r_1)^{m_2} \bmod n^2) = m_1m_2 \bmod n$$&lt;/p>
+&lt;p>此外，我们可以式子变换为更为普通的形式。&lt;/p>
+&lt;p>$$D(E(m_1, r_1)^k \bmod n^2) = km_1 \bmod n$$&lt;/p>
+&lt;div>
+&lt;pre style="outline: none; -webkit-user-modify: read-write-plaintext-only;" spellcheck="false"
+id="id-5614ec48448277a0b2763566487208ad4420f398">&lt;code class="language-python" data-lang="python">m1 = 520
+k = 1314
+c1 = encrypt(m1, pk)
+c = pow_mod(c1, k, n2)
+m = decrypt(c, sk)
+print(&amp;#34;m1:&amp;#34;, m1)
+print(&amp;#34;k: &amp;#34;, k)
+print(&amp;#34;m: &amp;#34;, m)
+assert m == m1 * k&lt;/code>&lt;/pre>
+&lt;/div>
+&lt;codapi-snippet sandbox="python" editor="basic" selector="#id-5614ec48448277a0b2763566487208ad4420f398"
+output-mode="" template="#main.py">&lt;/codapi-snippet>
+&lt;h2 id="pailler-correctness">Pailler Correctness&lt;/h2>
+&lt;h3 id="二项式展开定理">二项式展开定理&lt;/h3>
+&lt;p>在了解 Pailler 加密 &amp;amp; 解密的正确性之前，我们需要知道 &lt;strong>二项式展开定理&lt;/strong>，对于 $$(1 + n) ^ x$$ 用二项式展开可以得到如下的式子：&lt;/p>
+&lt;p>$$
+(1 + n) ^ x = \sum_{k=0}^{x}{\binom{x}{k}n^k} = 1 + nx + \binom{x}{2}n^2 + \cdots + n^x
+$$&lt;/p>
+&lt;p>我们将两边都进行模 $$n^2$$，这样我们可以得到如下的式子：&lt;/p>
+&lt;p>$$
+(1 + n)^ x \equiv 1 + nx \pmod{n^2}
+$$&lt;/p>
+&lt;p>我们令 $$y = (1 + n) ^ x$$，根据上式稍微变化一下，我们可以得到如下的式子：&lt;/p>
+&lt;p>$$
+y = kn^2 + 1 + nx
+$$&lt;/p>
+&lt;p>两边减 $$1$$，在进行除 $$n$$ 可以得到如下的式子&lt;/p>
+&lt;p>$$
+\frac{y-1}{n} = kn + x
+$$&lt;/p>
+&lt;p>最终得到如下的式子&lt;/p>
+&lt;p>$$
+x \equiv \frac{y - 1}{n} \pmod{n}
+$$&lt;/p>
+&lt;p>因此对于函数 $$L(x)$$，我们可以得到如下的式子：&lt;/p>
+&lt;p>$$
+L((1 + n) ^ x \bmod n^2) \equiv x \pmod{n}
+$$&lt;/p>
+&lt;h3 id="carmichael-定理">Carmichael 定理&lt;/h3>
+&lt;p>&lt;a href="https://en.wikipedia.org/wiki/Carmichael_function"target="_blank" rel="noopener noreferrer">Carmichael theorem&lt;/a> 定理：$$\lambda$$是$$n$$的 Carmichael 函数，Carmichael 函数$$\lambda(n)$$是使得对于所有与$$n$$互质的整数$$w$$，都有$$w ^{\lambda(n)} \equiv 1 \pmod n$$。对于 Carmichael 定理，满足以下的式子：&lt;/p>
+&lt;p>$$
+\left\{
+\begin{array}{cc}
+w^{\lambda} \equiv 1 \bmod n \\
+w^{n\lambda} \equiv 1 \bmod{n^{2}}
+\end{array}
+\right.
+$$&lt;/p>
+&lt;p>对于第二个等式，我们可以从第一式子出发并结合 &lt;strong>二项式展开定理&lt;/strong>，从第一个式子出发，我们可以得到如下的式子：$$w^{\lambda} = 1 + kn$$，两边同时进行幂次操作可以得到 $$w^{n\lambda} = (1 + kn)^n$$，根据二项式展开定理的结论，我们可以得到如下的式子：&lt;/p>
+&lt;p>$$
+w ^ {n\lambda} \equiv (1 + kn) ^ {n} \equiv 1 + kn^2 + \binom{n}{2}k^2n^2 + \cdots + n^n \equiv 1 \pmod{n^2}
+$$&lt;/p>
+&lt;p>所以对于 Pailler 解密的式子：&lt;/p>
+&lt;p>$$
+L(c^{\lambda} \bmod n^2) \cdot \mu \equiv \frac{L(c^\lambda \bmod{n^2})}{L(g^\lambda \bmod n^2)} \bmod n
+$$&lt;/p>
+&lt;p>其中 $$c^\lambda \equiv g^{m\lambda}r^{m\lambda} \equiv g^{m\lambda} \pmod{n^2}$$，所以可以得到如下的式子：&lt;/p>
+&lt;p>$$
+L(c^{\lambda} \bmod n^2) \cdot \mu \equiv \frac{L(g^{m\lambda} \bmod{n^2})}{L(g^\lambda \bmod n^2)} \bmod n
+$$&lt;/p>
+&lt;p>由 Carmichael 定理可知：$$g^\lambda \equiv 1 \bmod n$$，所以我们可以得到如下的式子：&lt;/p>
+&lt;p>$$
+g^\lambda \equiv 1 + kn \pmod{n^2}
+$$&lt;/p>
+&lt;p>$$
+g^{m\lambda} \equiv (1 + kn)^m \equiv 1 + kmn \pmod{n^2}
+$$&lt;/p>
+&lt;p>那么，我们可以将式子式子进行化简：&lt;/p>
+&lt;p>$$
+L(g^{m\lambda} \bmod n^2) = \frac{g^{m\lambda} -1}{n} = km
+$$&lt;/p>
+&lt;p>$$
+L(g^\lambda \bmod n^2) = \frac{g^\lambda - 1}{n} = k
+$$&lt;/p>
+&lt;p>将上式代入到解密的式子中，可以得到最终的结果：&lt;/p>
+&lt;p>$$
+L(c^{\lambda} \bmod n^2) \cdot \mu \equiv \frac{L(g^{m\lambda} \bmod n^2)}{L(g^\lambda \bmod n^2)} \equiv \frac{km}{k} \equiv m \bmod n
+$$&lt;/p>
+&lt;p>这样就证明了 Pailler 的 ✅ 正确性。&lt;/p>
+&lt;h2 id="references">References&lt;/h2>
+&lt;blockquote>
+&lt;p>&lt;a href="https://en.wikipedia.org/wiki/Paillier_cryptosystem"target="_blank" rel="noopener noreferrer">Wikipedia: Paillier cryptosystem&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://en.wikipedia.org/wiki/Carmichael_function"target="_blank" rel="noopener noreferrer">Wikipedia: Carmichael function&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://citeseerx.ist.psu.edu/document?repid=rep1&amp;amp;type=pdf&amp;amp;doi=592dd02703a7e2b5776f0467026b8f4c1bad9d26"target="_blank" rel="noopener noreferrer">Public-Key Cryptosystems Based on Composite Degree Residuosity Classes&lt;/a>&lt;/p>
+&lt;/blockquote></description></item><item><title>接雨水</title><link>https://52funny.github.io/posts/%E6%8E%A5%E9%9B%A8%E6%B0%B4/</link><pubDate>Mon, 20 May 2024 10:04:16 +0800</pubDate><guid>https://52funny.github.io/posts/%E6%8E%A5%E9%9B%A8%E6%B0%B4/</guid><description>&lt;p>&lt;a href="https://leetcode.cn/problems/trapping-rain-water/"target="_blank" rel="noopener noreferrer">接雨水&lt;/a> 是 Leetcode 上的一道经典的算法题目，它可以用很多种方法来解决，可以很好的考察做题者的思维方式。&lt;/p>
 &lt;h2 id="题目描述">题目描述&lt;/h2>
 &lt;p>给定 &lt;code>n&lt;/code> 个非负整数表示每个宽度为 &lt;code>1&lt;/code> 的柱子的高度图，计算按此排列的柱子，下雨之后能接多少雨水。&lt;/p>
 &lt;p>比如我们有一串柱子的高度数组 &lt;code>[2, 1, 3, 1, 0, 1, 2]&lt;/code>，我们可以画出对应的表示图。&lt;/p>
@@ -1602,70 +1861,4 @@ alt="Xnip2020-03-25_14-35-53"/>&lt;/p>
 &lt;ul>
 &lt;li>&lt;code>create or replace view view_stu as select sno, sname from stu;&lt;/code>&lt;/li>
 &lt;li>&lt;code>alter view view_stu as select sno, sname from stu;&lt;/code>&lt;/li>
-&lt;/ul></description></item><item><title>利用Caddy方向代理Rocket.Chat</title><link>https://52funny.github.io/posts/010/</link><pubDate>Mon, 02 Mar 2020 16:04:42 +0800</pubDate><guid>https://52funny.github.io/posts/010/</guid><description>&lt;blockquote>
-&lt;p>&lt;a href="https://rocket.chat/docs/"target="_blank" rel="noopener noreferrer">Rocket.Chat docs&lt;/a>&lt;/p>
-&lt;/blockquote>
-&lt;p>这次使用这个 Rocket.Chat 是为了填补上次的 Caddy 的坑,上次的 Caddy 并没有展现 Caddy 的魅力,这次我用 Caddy 的反向代理来部署 Rocket.Chat 这个服务.&lt;/p>
-&lt;p>Rocket.Chat 是一种类似 Slack 的开源聊天软件.&lt;/p>
-&lt;h3 id="rocketchat-的特性">&lt;strong>Rocket.Chat 的特性&lt;/strong>&lt;/h3>
-&lt;ul>
-&lt;li>群组聊天&lt;/li>
-&lt;li>直接通信&lt;/li>
-&lt;li>私聊群&lt;/li>
-&lt;li>桌面通知&lt;/li>
-&lt;li>媒体嵌入&lt;/li>
-&lt;li>链接预览&lt;/li>
-&lt;li>文件上传&lt;/li>
-&lt;li>语音/视频聊天&lt;/li>
-&lt;li>截图&lt;/li>
-&lt;li>支持你目前使用的任何平台&lt;/li>
-&lt;/ul>
-&lt;p>我将用 Caddy 的反向代理和自动签发 https 证书来搭建 Rocket.Chatl, 我将在 Ununtu18.04(LTS)上来搭建&lt;/p>
-&lt;br>
-&lt;h3 id="部署环境">部署环境&lt;/h3>
-&lt;ul>
-&lt;li>一台 Ubuntu18.04 (LTS)的服务器&lt;/li>
-&lt;li>域名 (非必须,我将演示非域名和域名的不同环境)&lt;/li>
-&lt;/ul>
-&lt;br>
-&lt;h3 id="不使用-caddy-反向代理">不使用 Caddy 反向代理&lt;/h3>
-&lt;p>连接 vps, 然后更新操作系统&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">sudo apt update &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> sudo apt upgrade -y
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>用 snap 安装 Rocket.Chat&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">sudo snap install rocketchat-server
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后你就安装完毕了&lt;/p>
-&lt;p>然后在浏览器里输入你的&lt;code>ip:3000&lt;/code>就可以访问你的 Rocket.Chat&lt;/p>
-&lt;br>
-&lt;h3 id="使用-caddy-反向代理">使用 Caddy 反向代理&lt;/h3>
-&lt;p>安装 Caddy 可以参考之前的文档&lt;a href="https://www.52funny.top/archives/caddyserver%E6%90%AD%E5%BB%BAweb%E6%9C%8D%E5%8A%A1%E5%99%A8"target="_blank" rel="noopener noreferrer">CaddyServer 搭建 web 服务器&lt;/a>&lt;/p>
-&lt;p>编辑 Caddyfile 文件&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">sudo vim /etc/caddy/Caddyfile
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>输入以下内容&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">http://:80 &lt;span class="o">{&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> reverse_proxy * 127.0.0.1:3000
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> encode zstd gzip
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">}&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后就可以通过域名访问了&lt;/p>
-&lt;br>
-&lt;h3 id="用域名访问">用域名访问&lt;/h3>
-&lt;p>&lt;strong>首先你的去域名服务商,添加一个 A 记录指向你的服务器 ip&lt;/strong>&lt;/p>
-&lt;p>编辑 Caddyfile 文件&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">sudo vim /etc/caddy/Caddyfile
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>输入以下内容&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">yourdomain &lt;span class="o">{&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> tls youremail
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> reverse_proxy * 127.0.0.1:3000
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> encode zstd gzip
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">}&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>只需要将 yourdomain 改成你的解析的域名, youremail 改成你的邮箱&lt;/strong>&lt;/p>
-&lt;p>For Example&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">chat.redwolf233.top &lt;span class="o">{&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> tls yourself@example.com
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> reverse_proxy * 127.0.0.1:3000
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> encode zstd gzip
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">}&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后你就可以访问你的域名来进行操作了,下面给几张 Photos
-&lt;img src="https://file.52funny.top/blogpic/6e9108cec838a6d04926cf1d711a7d73.png"
-alt/>&lt;/p>
-&lt;p>&lt;img src="https://file.52funny.top/blogpic/90d05b04d3819a675a40550a9629584b.png"
-alt/>&lt;/p></description></item></channel></rss>
+&lt;/ul></description></item></channel></rss>

@@ -1,0 +1,166 @@
+<!doctype html><html lang=zh-hans><meta charset=utf-8><meta name=generator content="Hugo 0.119.0"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name=color-scheme content="light dark"><meta name=supported-color-schemes content="light dark"><title>Pailler 加密方案&nbsp;&ndash;&nbsp;52funny Blog</title><link rel=stylesheet href=/css/core.min.6e00d43e448e61d1b56f5a567b89e5980d6a853040f7b9051781b433448f1333e076f093469e3de5b864f5dfa01d29f2.css integrity=sha384-bgDUPkSOYdG1b1pWe4nlmA1qhTBA97kFF4G0M0SPEzPgdvCTRp495bhk9d+gHSny><meta name=twitter:card content="summary"><meta name=twitter:title content="Pailler 加密方案"><body><section id=header><div class="header wrap"><span class="header left-side"><a class="site home" href=/><span class="site name">52funny Blog</span></a></span>
+<span class="header right-side"><div class="nav wrap"><nav class=nav><a class="nav item" href=/categories/></a><a class="nav item" href=/tags/></a><a class="nav item" href=/>Home</a><a class="nav item" href=/algorithm>Algorithm</a></nav></div></span></div></section><section id=content><div class=article-container><section class="article header"><h1 class="article title">Pailler 加密方案</h1><p class="article date">2024-07-09</p></section><article class="article markdown-body"><p>Pailler 加密是 <a href="https://scholar.google.com/citations?user=xwzhjfoAAAAJ&amp;hl=en" target=_blank rel="noopener noreferrer">Pascal Paillier</a> 在 1999 年发表的论文「Public-Key Cryptosystems Based on Composite Degree Residuosity Classes」中提出的公钥密码学。</p><h2 id=算法描述>算法描述</h2><p>Pailler 加密主要分为分为三个步骤：</p><ul><li>密钥生成（Key Generation）</li><li>加密（Encryption）</li><li>解密（Decryption）</li></ul><p>密钥生成过程主要生成 Pailler 加密的 <strong>公钥</strong> 和 <strong>私钥</strong>，用于后期的加密和解密过程。加密阶段使用公钥对明文$$m$$进行加密获得密文$$c$$。解密阶段使用私钥对密文$$c$$进行解密获得明文$$m$$。同时 Pailler 加密并且满足同态密码性质：给定密文$$c_1$$和$$c_2$$，对密文进行计算可以获得在明文$$m_1$$和$$m_2$$上的操作。</p><h2 id=密钥生成>密钥生成</h2><p>密钥生成过程主要有以下几步操作：</p><ol><li>随机选择两个 <strong>长度相等</strong> 的随机素数$$p$$和$$q$$</li><li>计算$$n = p * q$$，并且计算$$\lambda = lcm(p-1, q-1)$$</li><li>选择一个随机数$$g \stackrel{\rm \$}{\leftarrow} \mathbb{Z}_{n^2}^*$$</li><li>然后计算一个$$\mu = (L(g ^ {\lambda} \bmod n ^ {2})) ^ {-1} \bmod n$$</li></ol><p>其中$$L(x) = \lfloor \frac{x-1}{n} \rfloor$$, 并且结果是一个整数。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>import</span> <span class=nn>libnum</span>
+</span></span><span class=line><span class=cl><span class=kn>import</span> <span class=nn>random</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>collections</span> <span class=kn>import</span> <span class=n>namedtuple</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># L(x) fucntion</span>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>L</span><span class=p>(</span><span class=n>x</span><span class=p>:</span> <span class=nb>int</span><span class=p>,</span> <span class=n>n</span><span class=p>:</span> <span class=nb>int</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=nb>int</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=p>(</span><span class=n>x</span> <span class=o>-</span> <span class=mi>1</span><span class=p>)</span> <span class=o>//</span> <span class=n>n</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># generate random number r</span>
+</span></span><span class=line><span class=cl><span class=c1># ensure lcd(r, n-1) = 1</span>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>random_number</span><span class=p>(</span><span class=n>n</span><span class=p>:</span> <span class=nb>int</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=nb>int</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>    <span class=k>while</span> <span class=kc>True</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=n>g</span> <span class=o>=</span> <span class=n>random</span><span class=o>.</span><span class=n>randint</span><span class=p>(</span><span class=mi>1</span><span class=p>,</span> <span class=n>n</span> <span class=o>-</span> <span class=mi>1</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=n>libnum</span><span class=o>.</span><span class=n>gcd</span><span class=p>(</span><span class=n>n</span><span class=p>,</span> <span class=n>g</span><span class=p>)</span> <span class=o>==</span> <span class=mi>1</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>            <span class=k>return</span> <span class=n>g</span>
+</span></span><span class=line><span class=cl>        <span class=k>else</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>            <span class=nb>print</span><span class=p>(</span><span class=n>g</span><span class=p>,</span> <span class=n>n</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># quickly power mod</span>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>pow_mod</span><span class=p>(</span><span class=n>a</span><span class=p>:</span> <span class=nb>int</span><span class=p>,</span> <span class=n>b</span><span class=p>:</span> <span class=nb>int</span><span class=p>,</span> <span class=n>p</span><span class=p>:</span> <span class=nb>int</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=nb>int</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>    <span class=n>r</span> <span class=o>=</span> <span class=mi>1</span>
+</span></span><span class=line><span class=cl>    <span class=k>while</span> <span class=n>b</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=n>r</span> <span class=o>=</span> <span class=n>r</span> <span class=o>*</span> <span class=n>a</span> <span class=o>%</span> <span class=n>p</span> <span class=k>if</span> <span class=n>b</span> <span class=o>&amp;</span> <span class=mi>1</span> <span class=k>else</span> <span class=n>r</span>
+</span></span><span class=line><span class=cl>        <span class=n>a</span> <span class=o>=</span> <span class=n>a</span> <span class=o>*</span> <span class=n>a</span> <span class=o>%</span> <span class=n>p</span>
+</span></span><span class=line><span class=cl>        <span class=n>b</span> <span class=o>&gt;&gt;=</span> <span class=mi>1</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>r</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># generate 256 bits prime number</span>
+</span></span><span class=line><span class=cl><span class=n>p</span> <span class=o>=</span> <span class=n>libnum</span><span class=o>.</span><span class=n>generate_prime</span><span class=p>(</span><span class=mi>256</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>q</span> <span class=o>=</span> <span class=n>libnum</span><span class=o>.</span><span class=n>generate_prime</span><span class=p>(</span><span class=mi>256</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>n</span> <span class=o>=</span> <span class=n>p</span> <span class=o>*</span> <span class=n>q</span>
+</span></span><span class=line><span class=cl><span class=n>n2</span> <span class=o>=</span> <span class=n>n</span> <span class=o>**</span> <span class=mi>2</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>phi_n</span> <span class=o>=</span> <span class=p>(</span><span class=n>p</span> <span class=o>-</span> <span class=mi>1</span><span class=p>)</span> <span class=o>*</span> <span class=p>(</span><span class=n>q</span> <span class=o>-</span> <span class=mi>1</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>lambd</span> <span class=o>=</span> <span class=n>libnum</span><span class=o>.</span><span class=n>lcm</span><span class=p>(</span><span class=n>p</span> <span class=o>-</span> <span class=mi>1</span><span class=p>,</span> <span class=n>q</span> <span class=o>-</span> <span class=mi>1</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># random number</span>
+</span></span><span class=line><span class=cl><span class=n>g</span> <span class=o>=</span> <span class=n>random_number</span><span class=p>(</span><span class=n>n2</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=c1># mu</span>
+</span></span><span class=line><span class=cl><span class=n>mu</span> <span class=o>=</span> <span class=n>pow_mod</span><span class=p>(</span><span class=n>L</span><span class=p>(</span><span class=n>pow_mod</span><span class=p>(</span><span class=n>g</span><span class=p>,</span> <span class=n>lambd</span><span class=p>,</span> <span class=n>n2</span><span class=p>),</span> <span class=n>n</span><span class=p>),</span> <span class=n>phi_n</span> <span class=o>-</span> <span class=mi>1</span><span class=p>,</span> <span class=n>n</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>PK</span> <span class=o>=</span> <span class=n>namedtuple</span><span class=p>(</span><span class=s2>&#34;PK&#34;</span><span class=p>,</span> <span class=p>[</span><span class=s2>&#34;n&#34;</span><span class=p>,</span> <span class=s2>&#34;g&#34;</span><span class=p>])</span>
+</span></span><span class=line><span class=cl><span class=n>SK</span> <span class=o>=</span> <span class=n>namedtuple</span><span class=p>(</span><span class=s2>&#34;SK&#34;</span><span class=p>,</span> <span class=p>[</span><span class=s2>&#34;lambd&#34;</span><span class=p>,</span> <span class=s2>&#34;mu&#34;</span><span class=p>])</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># public key</span>
+</span></span><span class=line><span class=cl><span class=n>pk</span> <span class=o>=</span> <span class=n>PK</span><span class=p>(</span><span class=n>n</span><span class=p>,</span> <span class=n>g</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=c1># secret key</span>
+</span></span><span class=line><span class=cl><span class=n>sk</span> <span class=o>=</span> <span class=n>SK</span><span class=p>(</span><span class=n>lambd</span><span class=p>,</span> <span class=n>mu</span><span class=p>)</span>
+</span></span></code></pre></div><h2 id=加密>加密</h2><p>加密过程主要有以下过程：</p><ol><li>首先待加密的消息 $$m$$ 满足 $$0 &lt;= m &lt; n$$</li><li>随机选择一个整数 $$r \stackrel{\$}{\leftarrow} \mathbb{Z}_{n}^{*}$$</li><li>计算一个一个密文 $$c = g^{m} \cdot r^{n} \bmod n^{2}$$</li></ol><div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=k>def</span> <span class=nf>encrypt</span><span class=p>(</span><span class=n>m</span><span class=p>:</span> <span class=nb>int</span><span class=p>,</span> <span class=n>pk</span><span class=p>:</span> <span class=n>PK</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=nb>int</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>    <span class=c1># return cipher text c = (g ** m)  * (r ** n) mod (n ** 2)</span>
+</span></span><span class=line><span class=cl>    <span class=n>r</span> <span class=o>=</span> <span class=n>random_number</span><span class=p>(</span><span class=n>n</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>pow_mod</span><span class=p>(</span><span class=n>g</span><span class=p>,</span> <span class=n>m</span><span class=p>,</span> <span class=n>n2</span><span class=p>)</span> <span class=o>*</span> <span class=n>pow_mod</span><span class=p>(</span><span class=n>r</span><span class=p>,</span> <span class=n>pk</span><span class=o>.</span><span class=n>n</span><span class=p>,</span> <span class=n>n2</span><span class=p>)</span> <span class=o>%</span> <span class=n>n2</span>
+</span></span></code></pre></div><h2 id=解密>解密</h2><p>解密主要有以下过程：</p><ol><li>密文 $$c$$ 是要被进行解密的内容</li><li>计算明文消息 $$m$$ 通过式子 $$m = L(c^{\lambda} \bmod n^{2}) \cdot \mu \bmod n$$</li></ol><div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=k>def</span> <span class=nf>decrypt</span><span class=p>(</span><span class=n>c</span><span class=p>:</span> <span class=nb>int</span><span class=p>,</span> <span class=n>sk</span><span class=p>:</span> <span class=n>SK</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=nb>int</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>L</span><span class=p>(</span><span class=n>pow_mod</span><span class=p>(</span><span class=n>c</span><span class=p>,</span> <span class=n>sk</span><span class=o>.</span><span class=n>lambd</span><span class=p>,</span> <span class=n>n2</span><span class=p>),</span> <span class=n>n</span><span class=p>)</span> <span class=o>*</span> <span class=n>mu</span> <span class=o>%</span> <span class=n>n</span>
+</span></span></code></pre></div><h2 id=encrypt--decrypt-demo>Encrypt & Decrypt Demo</h2><p>下面给出 <strong>加密</strong> 和 <strong>解密</strong> 的代码：</p><span id=main.py style=display:none>import libnum
+import random
+from collections import namedtuple
+# L(x) fucntion
+def L(x: int, n: int) -> int:
+return (x - 1) // n
+# generate random number r
+# ensure lcd(r, n-1) = 1
+def random_number(n: int) -> int:
+while True:
+g = random.randint(1, n - 1)
+if libnum.gcd(n, g) == 1:
+return g
+else:
+print(g, n)
+# quickly power mod
+def pow_mod(a: int, b: int, p: int) -> int:
+r = 1
+while b:
+r = r * a % p if b & 1 else r
+a = a * a % p
+b >>= 1
+return r
+# generate 256 bits prime number
+p = libnum.generate_prime(256)
+q = libnum.generate_prime(256)
+n = p * q
+n2 = n ** 2
+phi_n = (p - 1) * (q - 1)
+lambd = libnum.lcm(p - 1, q - 1)
+# random number
+g = random_number(n2)
+# mu
+mu = pow_mod(L(pow_mod(g, lambd, n2), n), phi_n - 1, n)
+PK = namedtuple("PK", ["n", "g"])
+SK = namedtuple("SK", ["lambd", "mu"])
+# public key
+pk = PK(n, g)
+# secret key
+sk = SK(lambd, mu)
+def encrypt(m: int, pk: PK) -> int:
+# return cipher text c = (g ** m) * (r ** n) mod (n ** 2)
+r = random_number(n)
+return pow_mod(g, m, n2) * pow_mod(r, pk.n, n2) % n2
+def decrypt(c: int, sk: SK) -> int:
+return L(pow_mod(c, sk.lambd, n2), n) * mu % n
+##CODE##</span><div><pre style=outline:none;-webkit-user-modify:read-write-plaintext-only spellcheck=false id=id-80ec890a6a8f62b447525251e34d4acefdcfb04d><code class=language-python data-lang=python>m = 520
+c = encrypt(m, pk)
+plain = decrypt(c, sk)
+print(&#34;pk:&#34;, pk)
+print(&#34;sk:&#34;, sk)
+print(&#34;m: &#34;, m)
+print(&#34;c: &#34;, c)
+print(&#34;m*:&#34;, plain)</code></pre></div><codapi-snippet sandbox=python editor=basic selector=#id-80ec890a6a8f62b447525251e34d4acefdcfb04d output-mode template=#main.py></codapi-snippet><h2 id=同态性质>同态性质</h2><p>Pailler 密码可以满足同态密码学的性质。通常所说的 <strong>同态加法</strong> 和 <strong>同态乘法</strong> 是对应 <strong>明文</strong> 上的操作，并不要求在密文上也需要满足加法和乘法的性质。如下式所示，当满足同态加法或同态乘法的时候，是对应运算 $$\bullet$$ 的操作，而并不是运算 $$\circ$$ 也要满足加法或乘法操作。</p><p>$$D(E(m_1) \circ E(m_2)) = m_1 \bullet m_2 $$</p><p>Pialler 满足同态加法，也就是对密文操作的时候相对于对明文做加法操作。</p><p>$$D(E(m_1, r_1) \cdot E(m_2, r_2) \bmod n^{2}) = (m_1 + m_2) \bmod n $$</p><div><pre style=outline:none;-webkit-user-modify:read-write-plaintext-only spellcheck=false id=id-911a3b5155848875ffb836b9ce1c7b533f5c61a1><code class=language-python data-lang=python>m1 = 520
+m2 = 1314
+c1 = encrypt(m1, pk)
+c2 = encrypt(m2, pk)
+c = c1 * c2 % n2
+m = decrypt(c, sk)
+
+print(&#34;m1: &#34;, m1)
+print(&#34;m2: &#34;, m2)
+print(&#34;m : &#34;, m)
+
+assert m == m1 &#43; m2</code></pre></div><codapi-snippet sandbox=python editor=basic selector=#id-911a3b5155848875ffb836b9ce1c7b533f5c61a1 output-mode template=#main.py></codapi-snippet><p>同时 Pailler 加密满足 <strong>同态乘法</strong>。</p><p>$$D(E(m_1, r_1)^{m_2} \bmod n^2) = m_1m_2 \bmod n$$</p><p>此外，我们可以式子变换为更为普通的形式。</p><p>$$D(E(m_1, r_1)^k \bmod n^2) = km_1 \bmod n$$</p><div><pre style=outline:none;-webkit-user-modify:read-write-plaintext-only spellcheck=false id=id-5614ec48448277a0b2763566487208ad4420f398><code class=language-python data-lang=python>m1 = 520
+k = 1314
+c1 = encrypt(m1, pk)
+c = pow_mod(c1, k, n2)
+m = decrypt(c, sk)
+print(&#34;m1:&#34;, m1)
+print(&#34;k: &#34;, k)
+print(&#34;m: &#34;, m)
+assert m == m1 * k</code></pre></div><codapi-snippet sandbox=python editor=basic selector=#id-5614ec48448277a0b2763566487208ad4420f398 output-mode template=#main.py></codapi-snippet><h2 id=pailler-correctness>Pailler Correctness</h2><h3 id=二项式展开定理>二项式展开定理</h3><p>在了解 Pailler 加密 & 解密的正确性之前，我们需要知道 <strong>二项式展开定理</strong>，对于 $$(1 + n) ^ x$$ 用二项式展开可以得到如下的式子：</p><p>$$
+(1 + n) ^ x = \sum_{k=0}^{x}{\binom{x}{k}n^k} = 1 + nx + \binom{x}{2}n^2 + \cdots + n^x
+$$</p><p>我们将两边都进行模 $$n^2$$，这样我们可以得到如下的式子：</p><p>$$
+(1 + n)^ x \equiv 1 + nx \pmod{n^2}
+$$</p><p>我们令 $$y = (1 + n) ^ x$$，根据上式稍微变化一下，我们可以得到如下的式子：</p><p>$$
+y = kn^2 + 1 + nx
+$$</p><p>两边减 $$1$$，在进行除 $$n$$ 可以得到如下的式子</p><p>$$
+\frac{y-1}{n} = kn + x
+$$</p><p>最终得到如下的式子</p><p>$$
+x \equiv \frac{y - 1}{n} \pmod{n}
+$$</p><p>因此对于函数 $$L(x)$$，我们可以得到如下的式子：</p><p>$$
+L((1 + n) ^ x \bmod n^2) \equiv x \pmod{n}
+$$</p><h3 id=carmichael-定理>Carmichael 定理</h3><p><a href=https://en.wikipedia.org/wiki/Carmichael_function target=_blank rel="noopener noreferrer">Carmichael theorem</a> 定理：$$\lambda$$是$$n$$的 Carmichael 函数，Carmichael 函数$$\lambda(n)$$是使得对于所有与$$n$$互质的整数$$w$$，都有$$w ^{\lambda(n)} \equiv 1 \pmod n$$。对于 Carmichael 定理，满足以下的式子：</p><p>$$
+\left\{
+\begin{array}{cc}
+w^{\lambda} \equiv 1 \bmod n \\
+w^{n\lambda} \equiv 1 \bmod{n^{2}}
+\end{array}
+\right.
+$$</p><p>对于第二个等式，我们可以从第一式子出发并结合 <strong>二项式展开定理</strong>，从第一个式子出发，我们可以得到如下的式子：$$w^{\lambda} = 1 + kn$$，两边同时进行幂次操作可以得到 $$w^{n\lambda} = (1 + kn)^n$$，根据二项式展开定理的结论，我们可以得到如下的式子：</p><p>$$
+w ^ {n\lambda} \equiv (1 + kn) ^ {n} \equiv 1 + kn^2 + \binom{n}{2}k^2n^2 + \cdots + n^n \equiv 1 \pmod{n^2}
+$$</p><p>所以对于 Pailler 解密的式子：</p><p>$$
+L(c^{\lambda} \bmod n^2) \cdot \mu \equiv \frac{L(c^\lambda \bmod{n^2})}{L(g^\lambda \bmod n^2)} \bmod n
+$$</p><p>其中 $$c^\lambda \equiv g^{m\lambda}r^{m\lambda} \equiv g^{m\lambda} \pmod{n^2}$$，所以可以得到如下的式子：</p><p>$$
+L(c^{\lambda} \bmod n^2) \cdot \mu \equiv \frac{L(g^{m\lambda} \bmod{n^2})}{L(g^\lambda \bmod n^2)} \bmod n
+$$</p><p>由 Carmichael 定理可知：$$g^\lambda \equiv 1 \bmod n$$，所以我们可以得到如下的式子：</p><p>$$
+g^\lambda \equiv 1 + kn \pmod{n^2}
+$$</p><p>$$
+g^{m\lambda} \equiv (1 + kn)^m \equiv 1 + kmn \pmod{n^2}
+$$</p><p>那么，我们可以将式子式子进行化简：</p><p>$$
+L(g^{m\lambda} \bmod n^2) = \frac{g^{m\lambda} -1}{n} = km
+$$</p><p>$$
+L(g^\lambda \bmod n^2) = \frac{g^\lambda - 1}{n} = k
+$$</p><p>将上式代入到解密的式子中，可以得到最终的结果：</p><p>$$
+L(c^{\lambda} \bmod n^2) \cdot \mu \equiv \frac{L(g^{m\lambda} \bmod n^2)}{L(g^\lambda \bmod n^2)} \equiv \frac{km}{k} \equiv m \bmod n
+$$</p><p>这样就证明了 Pailler 的 ✅ 正确性。</p><h2 id=references>References</h2><blockquote><p><a href=https://en.wikipedia.org/wiki/Paillier_cryptosystem target=_blank rel="noopener noreferrer">Wikipedia: Paillier cryptosystem</a></p><p><a href=https://en.wikipedia.org/wiki/Carmichael_function target=_blank rel="noopener noreferrer">Wikipedia: Carmichael function</a></p><p><a href="https://citeseerx.ist.psu.edu/document?repid=rep1&amp;type=pdf&amp;doi=592dd02703a7e2b5776f0467026b8f4c1bad9d26" target=_blank rel="noopener noreferrer">Public-Key Cryptosystems Based on Composite Degree Residuosity Classes</a></p></blockquote></article><section class="article labels"><a class=tag href=/tags/cryptography/>cryptography</a></section></div><div class="article bottom"><section class="article navigation"><p><a class=link href=/posts/%E6%8E%A5%E9%9B%A8%E6%B0%B4/><span class="iconfont icon-article"></span>接雨水</a></p></section></div></section><section id=footer><div class=footer-wrap><p class=copyright>52funny Blog</p><p class=powerby><span>Powered&nbsp;by&nbsp;</span><a href=https://gohugo.io target=_blank rel="noopener noreferrer">Hugo</a><span>&nbsp;&&nbsp;</span><a href=https://themes.gohugo.io/hugo-notepadium/ target=_blank rel="noopener noreferrer">Notepadium</a>
+<a href='https://ipv6-test.com/validate.php?url=referer'><img src=https://ipv6-test.com/button-ipv6-80x15.png alt='ipv6 ready' title='ipv6 ready' border=0></a></p></div></section><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css integrity=sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq crossorigin=anonymous><script defer src=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js integrity=sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz crossorigin=anonymous></script><script defer src=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js integrity=sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI crossorigin=anonymous onload=renderMathInElement(document.body)></script><script src=/js/hljs.min.6f979583f61e4ec5f0b94f94eab2e130ee628032474d374414dba4e33cc12097a0d01fe65b33378b23f6d3b053b95445.js integrity=sha384-b5eVg/YeTsXwuU+U6rLhMO5igDJHTTdEFNuk4zzBIJeg0B/mWzM3iyP207BTuVRF></script><script>hljs.initHighlightingOnLoad()</script>
+<link rel=stylesheet href=https://unpkg.com/@antonz/codapi@0.19.0/dist/snippet.css><script src=https://unpkg.com/@antonz/codapi@0.19.0/dist/snippet.js></script>
+<codapi-settings url=https://codapi.52funny.io/v1></codapi-settings></body></html>
